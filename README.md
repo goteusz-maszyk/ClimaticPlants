@@ -1,5 +1,5 @@
 ![Compatible with Sinytra Connector](https://raw.githubusercontent.com/Sinytra/.github/refs/heads/main/badges/connector/cozy.svg)
-
+![cloth-config-api](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/requires/cloth-config-api_vector.svg)
 **NOTE: while the mod is generally stable, you may encounter issues with config when updating the mod.**
 
 # General
