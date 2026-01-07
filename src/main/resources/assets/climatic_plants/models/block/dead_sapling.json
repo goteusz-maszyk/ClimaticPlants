@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "climatic_plants:block/dead_sapling"
+  }
+}
