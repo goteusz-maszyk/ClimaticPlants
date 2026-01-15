@@ -1,5 +1,6 @@
 package dev.gotitim.climatic_plants;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -7,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -59,16 +61,27 @@ public class ModBlocks {
         }
     }
 
-    public static class DeadCropBlock extends Block {
+    public static class DeadCropBlock extends BushBlock {
         private static final @NotNull VoxelShape SHAPE = Block.box(0, 0, 0, 16, 4, 16);
+        public static final MapCodec<DeadCropBlock> CODEC = simpleCodec(DeadCropBlock::new);
 
         @Override
         protected @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
             return SHAPE;
         }
 
+        @Override
+        protected boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
+            return blockState.getBlock() instanceof FarmBlock;
+        }
+
         public DeadCropBlock(BlockBehaviour.Properties properties) {
             super(properties);
+        }
+
+        @Override
+        protected @NotNull MapCodec<? extends BushBlock> codec() {
+            return CODEC;
         }
     }
 }
