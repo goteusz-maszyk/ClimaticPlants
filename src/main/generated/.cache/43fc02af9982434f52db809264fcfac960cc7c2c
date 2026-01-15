@@ -1,9 +1,0 @@
-// 1.21.1	2026-01-15T21:34:56.370220732	ClimaticPlants/Block Loot Tables
-6f2d81c438151492ca235d03f645f5fae730873b data/climatic_plants/loot_table/blocks/dead_fungus.json
-9ea890471520a157347228648f98bc15ca17c81e data/climatic_plants/loot_table/blocks/frozen_crop.json
-34615bb34879fd1b2bf0f677f7275540c655dcef data/climatic_plants/loot_table/blocks/potted_dead_sapling.json
-9e36c3697eefc82e8a717ff249850b1a767d3afb data/climatic_plants/loot_table/blocks/frozen_bush.json
-6c529689f0f0363a631ded4bb2329419847d61a8 data/climatic_plants/loot_table/blocks/dead_sapling.json
-d8d30ee9e24230795388e922ee8cd8977a515562 data/climatic_plants/loot_table/blocks/potted_frozen_bush.json
-13c21b6b16a90cecdd998181a20dfca17783c82d data/climatic_plants/loot_table/blocks/potted_dead_fungus.json
-8663eb614397a992609a826bf2eb3ea8e9cf18af data/climatic_plants/loot_table/blocks/burnt_crop.json
