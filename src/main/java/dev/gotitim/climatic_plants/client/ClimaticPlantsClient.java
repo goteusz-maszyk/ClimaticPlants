@@ -17,5 +17,8 @@ public class ClimaticPlantsClient implements ClientModInitializer {
 
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.DEAD_FUNGUS, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_DEAD_FUNGUS, RenderType.cutout());
+
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BURNT_CROP, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.FROZEN_CROP, RenderType.cutout());
     }
 }

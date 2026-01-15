@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class PlantKiller {
@@ -89,6 +90,9 @@ public class PlantKiller {
                     return true;
                 }
             } else {
+                if (block instanceof CropBlock) {
+                    level.setBlockAndUpdate(pos, ModBlocks.FROZEN_CROP.defaultBlockState());
+                }
                 return true;
             }
 
@@ -96,6 +100,9 @@ public class PlantKiller {
             if (overheatVal < ConfigUtils.CONFIG.crop_survival_margin) {
                 return Math.random() > overheatVal / ConfigUtils.CONFIG.crop_survival_margin;
             } else {
+                if (block instanceof CropBlock) {
+                    level.setBlockAndUpdate(pos, ModBlocks.BURNT_CROP.defaultBlockState());
+                }
                 return true;
             }
         return false;
