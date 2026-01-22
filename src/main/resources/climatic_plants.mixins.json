@@ -15,6 +15,7 @@
     "SugarCaneGrowthMixin"
   ],
   "client": [
+    "BlockItemMixin",
   ],
   "injectors": {
     "defaultRequire": 1
