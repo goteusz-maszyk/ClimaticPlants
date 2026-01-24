@@ -54,7 +54,9 @@ public class PlantKiller {
             state = ModBlocks.DEAD_SAPLING.defaultBlockState();
             pitch = 1.2f;
         }
-        world.setBlockAndUpdate(pos, state);
+        if (state.canSurvive(world, pos)) {
+            world.setBlockAndUpdate(pos, state);
+        }
         world.playSound(null, pos, SoundEvents.CHERRY_SAPLING_BREAK, SoundSource.BLOCKS, 1f, pitch);
     }
 
