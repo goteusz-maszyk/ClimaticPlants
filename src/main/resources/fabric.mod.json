@@ -3,9 +3,13 @@
   "id": "climatic_plants",
   "version": "${version}",
   "name": "ClimaticPlants",
-  "description": "",
-  "authors": [],
-  "contact": {},
+  "description": "Temperature now matters, no more growing spruces in a tropical forest!",
+  "authors": ["gotitim"],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/climatic-plants",
+    "sources": "https://github.com/goteusz-maszyk/ClimaticPlants",
+    "issues": "https://github.com/goteusz-maszyk/ClimaticPlants/issues"
+  },
   "license": "AGPL-3.0",
   "icon": "assets/climatic_plants/icon.png",
   "environment": "*",
@@ -25,7 +29,7 @@
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
-    "fabric-api": "*",
+    "fabric-api": ">=${fabric_version}",
     "minecraft": "${minecraft_version}",
     "cloth-config": ">=${cloth_version}"
   }
