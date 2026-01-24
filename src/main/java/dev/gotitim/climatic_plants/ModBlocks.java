@@ -8,7 +8,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -70,9 +69,8 @@ public class ModBlocks {
             return SHAPE;
         }
 
-        @Override
-        protected boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
-            return blockState.getBlock() instanceof FarmBlock;
+        protected boolean mayPlaceOn(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+            return blockState.is(Blocks.FARMLAND);
         }
 
         public DeadCropBlock(BlockBehaviour.Properties properties) {
