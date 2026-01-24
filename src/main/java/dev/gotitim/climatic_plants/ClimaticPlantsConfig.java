@@ -40,6 +40,8 @@ public class ClimaticPlantsConfig implements ConfigData {
             Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.MELON_STEM), new float[]{0.9f, 1.75f}),
             Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.CACTUS), new float[]{1.25f, 2.5f}),
             Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.SUGAR_CANE), new float[]{1f, 2f}),
-            Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.COCOA), new float[]{0.85f, 1.15f})
+            Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.COCOA), new float[]{0.85f, 1.15f}),
+            Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.SWEET_BERRY_BUSH), new float[]{0f, 0.7f}),
+            Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.BAMBOO), new float[]{0.9f, 2f})
     );
 }

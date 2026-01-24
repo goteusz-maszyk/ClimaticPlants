@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class PlantKiller {
-    public static boolean tryKillSapling(Holder<Biome> biome, float[] tempRange, BlockPos pos, ServerLevel world) {
+    public static boolean tryKillSapling(Holder<Biome> biome, float[] tempRange, BlockPos pos, Level world) {
         if (biome.is(BiomeTags.IS_OVERWORLD)) {
             float tempValue = TemperatureHandler.getTemperature(biome.value(), pos);
             float min = tempRange[0];
@@ -41,7 +41,7 @@ public class PlantKiller {
         return false;
     }
 
-    public static void killSapling(ServerLevel world, BlockPos pos, float difference) {
+    public static void killSapling(Level world, BlockPos pos, float difference) {
         float pitch;
         BlockState state;
         if (difference < -ConfigUtils.CONFIG.sapling_survival_margin*2.5) {

@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AzaleaBlockGrowthMixin",
+    "BambooSaplingMixin",
+    "BambooStalkMixin",
     "CactusGrowthMixin",
     "CocoaGrowthMixin",
     "CropGrowthMixin",
@@ -12,10 +14,11 @@
     "NetherWartGrowthMixin",
     "SaplingBlockGrowthMixin",
     "StemGrowthMixin",
-    "SugarCaneGrowthMixin"
+    "SugarCaneGrowthMixin",
+    "SweetBerryGrowthMixin"
   ],
   "client": [
-    "BlockItemMixin",
+    "BlockItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1
