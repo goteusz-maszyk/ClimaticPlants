@@ -38,10 +38,44 @@ public class ClimaticPlantsConfig implements ConfigData {
             Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.BEETROOTS), new float[]{0f, 0.8f}),
             Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.PUMPKIN_STEM), new float[]{0.5f, 1f}),
             Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.MELON_STEM), new float[]{0.9f, 1.75f}),
-            Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.CACTUS), new float[]{1.25f, 2.5f}),
+            Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.CACTUS), new float[]{1.5f, 2.5f}),
             Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.SUGAR_CANE), new float[]{1f, 2f}),
             Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.COCOA), new float[]{0.85f, 1.15f}),
             Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.SWEET_BERRY_BUSH), new float[]{0f, 0.7f}),
-            Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.BAMBOO), new float[]{0.9f, 2f})
+            Map.entry(BuiltInRegistries.BLOCK.getKey(Blocks.BAMBOO), new float[]{0.9f, 2f}),
+            Map.entry(naturesSpirit("redwood_sapling"), new float[]{-0.1f, 0.5f}),
+            Map.entry(naturesSpirit("sugi_sapling"), new float[]{0.85f, 1.1f}),
+            Map.entry(naturesSpirit("blue_wisteria_sapling"), new float[]{0.7f, 0.95f}),
+            Map.entry(naturesSpirit("white_wisteria_sapling"), new float[]{0.7f, 0.95f}),
+            Map.entry(naturesSpirit("pink_wisteria_sapling"), new float[]{0.7f, 0.95f}),
+            Map.entry(naturesSpirit("purple_wisteria_sapling"), new float[]{0.7f, 0.95f}),
+            Map.entry(naturesSpirit("fir_sapling"), new float[]{-0.1f, 0.75f}),
+            Map.entry(naturesSpirit("willlow_sapling"), new float[]{0.65f, 0.95f}),
+            Map.entry(naturesSpirit("aspen_sapling"), new float[]{0.35f, 0.55f}),
+            Map.entry(naturesSpirit("red_maple_sapling"), new float[]{0.35f, 0.55f}),
+            Map.entry(naturesSpirit("orange_maple_sapling"), new float[]{0.35f, 0.55f}),
+            Map.entry(naturesSpirit("yellow_maple_sapling"), new float[]{0.35f, 0.55f}),
+            Map.entry(naturesSpirit("cypress_sapling"), new float[]{0.9f, 1.3f}),
+            Map.entry(naturesSpirit("olive_sapling"), new float[]{0.9f, 1.3f}),
+            Map.entry(naturesSpirit("joshua_sapling"), new float[]{1.6f, 2.5f}),
+            Map.entry(naturesSpirit("ghaf_sapling"), new float[]{1.6f, 2.5f}),
+            Map.entry(naturesSpirit("palo_verde_sapling"), new float[]{1.6f, 2.5f}),
+            Map.entry(naturesSpirit("cedar_sapling"), new float[]{1f, 1.4f}),
+            Map.entry(naturesSpirit("larch_sapling"), new float[]{0.6f, 1.95f}),
+            Map.entry(naturesSpirit("mahogany_sapling"), new float[]{1.7f, 2.2f}),
+            Map.entry(naturesSpirit("saxaul_sapling"), new float[]{1.9f, 2.5f}),
+            Map.entry(ResourceLocation.fromNamespaceAndPath("expandeddelight", "cinnamon_sapling"), new float[]{0.85f, 1.15f}),
+            Map.entry(farmersDelight("rice"), new float[]{0.8f, 2f}),
+            Map.entry(farmersDelight("cabbages"), new float[]{0f, 0.8f}),
+            Map.entry(farmersDelight("onions"), new float[]{0.2f, 1f}),
+            Map.entry(farmersDelight("budding_tomatoes"), new float[]{0.7f, 1.5f})
     );
+
+    public static ResourceLocation naturesSpirit(String id) {
+        return ResourceLocation.fromNamespaceAndPath("natures_spirit", id);
+    }
+
+    public static ResourceLocation farmersDelight(String id) {
+        return ResourceLocation.fromNamespaceAndPath("farmersdelight", id);
+    }
 }
