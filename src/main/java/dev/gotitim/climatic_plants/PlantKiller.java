@@ -68,7 +68,6 @@ public class PlantKiller {
 
     public static boolean randomDeath(float difference) {
         var r = Math.random();
-        System.out.println(r);
         return difference/ConfigUtils.CONFIG.sapling_survival_margin > r;
     }
 

@@ -1,5 +1,8 @@
 {
   "block.climatic_plants.frozen_bush": "Frozen Bush",
   "block.climatic_plants.dead_sapling": "Dead Sapling",
-  "block.climatic_plants.dead_fungus": "Dead Fungus"
+  "block.climatic_plants.dead_fungus": "Dead Fungus",
+  "item.climatic_plants.lore.toocold": "It seems that it's too cold for this plant here.",
+  "item.climatic_plants.lore.toohot": "It seems that it's too hot for this plant here.",
+  "item.climatic_plants.lore.perfecttemp": "It seems that conditions here are perfect for this plant."
 }

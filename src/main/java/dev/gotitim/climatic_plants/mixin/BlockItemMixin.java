@@ -27,16 +27,22 @@ public abstract class BlockItemMixin {
 
     @Inject(method = "getTooltipLines", at = @At(value = "TAIL"))
     public void appendHoverText(Item.TooltipContext tooltipContext, @Nullable Player player, TooltipFlag tooltipFlag, CallbackInfoReturnable<List<Component>> cir) {
+        if (player == null) {
+            return;
+        }
         ResourceLocation loc = BuiltInRegistries.BLOCK.getKey(getItem() instanceof BlockItem blockItem ? blockItem.getBlock() : null);
-        if (tooltipFlag.isAdvanced() && ConfigUtils.CONFIG.ranges.containsKey(loc)) {
+        if (ConfigUtils.CONFIG.ranges.containsKey(loc)) {
             float[] range = ConfigUtils.CONFIG.ranges.get(loc);
             float temp = TemperatureHandler.getTemperature(player.level().getBiome(player.blockPosition()).value(), player.blockPosition());
             if (temp < range[0]) {
-                cir.getReturnValue().add(Component.literal("This might be too cold for this plant to survive.").withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.ITALIC));
+                cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.toocold").withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.ITALIC));
+                return;
             }
             if (temp > range[1]) {
-                cir.getReturnValue().add(Component.literal("This might be too hot for this plant to survive.").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC));
+                cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.toohot").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC));
+                return;
             }
+            cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.perfecttemp").withStyle(ChatFormatting.GREEN).withStyle(ChatFormatting.ITALIC));
         }
     }
 }
