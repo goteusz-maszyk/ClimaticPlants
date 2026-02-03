@@ -12,7 +12,7 @@
     "CropGrowthMixin",
     "FungusBlockGrowthMixin",
     "NetherWartGrowthMixin",
-    "SaplingBlockGrowthMixin",
+    "TreeGrowthMixin",
     "StemGrowthMixin",
     "SugarCaneGrowthMixin",
     "SweetBerryGrowthMixin"

@@ -14,11 +14,11 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class PlantKiller {
-    public static boolean tryKillSapling(Holder<Biome> biome, float[] tempRange, BlockPos pos, Level world) {
+    public static boolean tryKillSapling(Holder<Biome> biome, PreferredClimate climate, BlockPos pos, Level world, BlockState originalState) {
         if (biome.is(BiomeTags.IS_OVERWORLD)) {
             float tempValue = biome.value().getHeightAdjustedTemperature(pos);
-            float min = tempRange[0];
-            float max = tempRange[1];
+            float min = climate.minTemperature;
+            float max = climate.maxTemperature;
 
             var freezeVal = min - tempValue;
             var overheatVal = tempValue - max;
@@ -56,8 +56,8 @@ public class PlantKiller {
         }
         if (state.canSurvive(world, pos)) {
             world.setBlockAndUpdate(pos, state);
+            world.playSound(null, pos, SoundEvents.CHERRY_SAPLING_BREAK, SoundSource.BLOCKS, 1f, pitch);
         }
-        world.playSound(null, pos, SoundEvents.CHERRY_SAPLING_BREAK, SoundSource.BLOCKS, 1f, pitch);
     }
 
 

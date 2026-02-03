@@ -1,10 +1,9 @@
 package dev.gotitim.climatic_plants.mixin;
 
+import dev.gotitim.climatic_plants.ClimaticPlants;
 import dev.gotitim.climatic_plants.ConfigUtils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -29,15 +28,15 @@ public abstract class BlockItemMixin {
         if (player == null) {
             return;
         }
-        ResourceLocation loc = BuiltInRegistries.BLOCK.getKey(getItem() instanceof BlockItem blockItem ? blockItem.getBlock() : null);
-        if (ConfigUtils.CONFIG.ranges.containsKey(loc)) {
-            float[] range = ConfigUtils.CONFIG.ranges.get(loc);
-            float temp = player.level().getBiome(player.blockPosition()).value().getHeightAdjustedTemperature(player.blockPosition());
-            if (temp - ConfigUtils.CONFIG.sapling_survival_margin / 2 < range[0]) {
+        var climate = ClimaticPlants.getClimate(getItem() instanceof BlockItem blockItem ? blockItem.getBlock() : null);
+        if (climate != null) {
+            float currentTemp = player.level().getBiome(player.blockPosition()).value().getHeightAdjustedTemperature(player.blockPosition());
+
+            if (currentTemp < climate.minTemperature - ConfigUtils.CONFIG.sapling_survival_margin / 2) {
                 cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.toocold").withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.ITALIC));
                 return;
             }
-            if (temp + ConfigUtils.CONFIG.sapling_survival_margin / 2 > range[1]) {
+            if (currentTemp > climate.maxTemperature + ConfigUtils.CONFIG.sapling_survival_margin / 2) {
                 cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.toohot").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC));
                 return;
             }

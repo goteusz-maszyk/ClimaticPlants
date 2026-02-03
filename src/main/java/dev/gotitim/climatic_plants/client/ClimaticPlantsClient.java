@@ -1,8 +1,11 @@
 package dev.gotitim.climatic_plants.client;
 
+import dev.gotitim.climatic_plants.ClimaticPlants;
 import dev.gotitim.climatic_plants.ModBlocks;
+import dev.gotitim.climatic_plants.network.PlantClimatePayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.minecraft.client.renderer.RenderType;
 
 public class ClimaticPlantsClient implements ClientModInitializer {
@@ -20,5 +23,11 @@ public class ClimaticPlantsClient implements ClientModInitializer {
 
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BURNT_CROP, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.FROZEN_CROP, RenderType.cutout());
+
+        ClientConfigurationNetworking.registerGlobalReceiver(PlantClimatePayload.ID, (payload, context) -> {
+            ClimaticPlants.climates.clear();
+            ClimaticPlants.climates.putAll(payload.data());
+        });
+
     }
 }
