@@ -33,11 +33,11 @@ public abstract class BlockItemMixin {
         if (ConfigUtils.CONFIG.ranges.containsKey(loc)) {
             float[] range = ConfigUtils.CONFIG.ranges.get(loc);
             float temp = player.level().getBiome(player.blockPosition()).value().getHeightAdjustedTemperature(player.blockPosition());
-            if (temp < range[0]) {
+            if (temp - ConfigUtils.CONFIG.sapling_survival_margin / 2 < range[0]) {
                 cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.toocold").withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.ITALIC));
                 return;
             }
-            if (temp > range[1]) {
+            if (temp + ConfigUtils.CONFIG.sapling_survival_margin / 2 > range[1]) {
                 cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.toohot").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC));
                 return;
             }
