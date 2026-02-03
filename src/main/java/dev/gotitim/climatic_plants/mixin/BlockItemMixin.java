@@ -1,7 +1,6 @@
 package dev.gotitim.climatic_plants.mixin;
 
 import dev.gotitim.climatic_plants.ConfigUtils;
-import dev.gotitim.climatic_plants.TemperatureHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -33,7 +32,7 @@ public abstract class BlockItemMixin {
         ResourceLocation loc = BuiltInRegistries.BLOCK.getKey(getItem() instanceof BlockItem blockItem ? blockItem.getBlock() : null);
         if (ConfigUtils.CONFIG.ranges.containsKey(loc)) {
             float[] range = ConfigUtils.CONFIG.ranges.get(loc);
-            float temp = TemperatureHandler.getTemperature(player.level().getBiome(player.blockPosition()).value(), player.blockPosition());
+            float temp = player.level().getBiome(player.blockPosition()).value().getHeightAdjustedTemperature(player.blockPosition());
             if (temp < range[0]) {
                 cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.toocold").withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.ITALIC));
                 return;

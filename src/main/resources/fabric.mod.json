@@ -32,5 +32,6 @@
     "fabric-api": ">=${fabric_version}",
     "minecraft": "${minecraft_version}",
     "cloth-config": ">=${cloth_version}"
-  }
+  },
+  "accessWidener": "climatic_plants.accesswidener"
 }

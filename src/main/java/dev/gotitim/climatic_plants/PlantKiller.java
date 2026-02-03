@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class PlantKiller {
     public static boolean tryKillSapling(Holder<Biome> biome, float[] tempRange, BlockPos pos, Level world) {
         if (biome.is(BiomeTags.IS_OVERWORLD)) {
-            float tempValue = TemperatureHandler.getTemperature(biome.value(), pos);
+            float tempValue = biome.value().getHeightAdjustedTemperature(pos);
             float min = tempRange[0];
             float max = tempRange[1];
 
@@ -78,7 +78,7 @@ public class PlantKiller {
         }
 
         var tempRange = ConfigUtils.getTemperatureRange(block);
-        float tempValue = TemperatureHandler.getTemperature(biome.value(), pos);
+        float tempValue = biome.value().getHeightAdjustedTemperature(pos);
         float min = tempRange[0];
         float max = tempRange[1];
 
