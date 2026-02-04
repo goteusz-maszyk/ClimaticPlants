@@ -9,3 +9,4 @@ accessible field net/minecraft/world/level/block/grower/TreeGrower megaTree Ljav
 accessible field net/minecraft/world/level/block/grower/TreeGrower secondaryMegaTree Ljava/util/Optional;
 accessible field net/minecraft/world/level/block/grower/TreeGrower flowers Ljava/util/Optional;
 accessible field net/minecraft/world/level/block/grower/TreeGrower secondaryFlowers Ljava/util/Optional;
+accessible field net/minecraft/world/level/block/FungusBlock feature Lnet/minecraft/resources/ResourceKey;

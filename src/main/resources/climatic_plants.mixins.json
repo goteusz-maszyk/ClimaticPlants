@@ -4,18 +4,10 @@
   "package": "dev.gotitim.climatic_plants.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AzaleaBlockGrowthMixin",
-    "BambooSaplingMixin",
-    "BambooStalkMixin",
-    "CactusGrowthMixin",
-    "CocoaGrowthMixin",
-    "CropGrowthMixin",
+    "BoneMealMixin",
     "FungusBlockGrowthMixin",
-    "NetherWartGrowthMixin",
-    "TreeGrowthMixin",
-    "StemGrowthMixin",
-    "SugarCaneGrowthMixin",
-    "SweetBerryGrowthMixin"
+    "RandomTickMixin",
+    "TreeGrowthMixin"
   ],
   "client": [
     "BlockItemMixin"

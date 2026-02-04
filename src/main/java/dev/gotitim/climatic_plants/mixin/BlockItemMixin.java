@@ -1,7 +1,6 @@
 package dev.gotitim.climatic_plants.mixin;
 
 import dev.gotitim.climatic_plants.ClimaticPlants;
-import dev.gotitim.climatic_plants.ConfigUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -28,19 +27,36 @@ public abstract class BlockItemMixin {
         if (player == null) {
             return;
         }
-        var climate = ClimaticPlants.getClimate(getItem() instanceof BlockItem blockItem ? blockItem.getBlock() : null);
-        if (climate != null) {
-            float currentTemp = player.level().getBiome(player.blockPosition()).value().getHeightAdjustedTemperature(player.blockPosition());
+        var climate = ClimaticPlants.getClimateNullable(getItem() instanceof BlockItem blockItem ? blockItem.getBlock() : null);
+        if (climate == null) {
+            return;
+        }
+        float currentTemp = player.level().getBiome(player.blockPosition()).value().getHeightAdjustedTemperature(player.blockPosition());
+        float currentDownfall = player.level().getBiome(player.blockPosition()).value().climateSettings.downfall();
 
-            if (currentTemp < climate.minTemperature - ConfigUtils.CONFIG.sapling_survival_margin / 2) {
-                cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.toocold").withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.ITALIC));
-                return;
-            }
-            if (currentTemp > climate.maxTemperature + ConfigUtils.CONFIG.sapling_survival_margin / 2) {
-                cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.toohot").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC));
-                return;
-            }
-            cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.perfecttemp").withStyle(ChatFormatting.GREEN).withStyle(ChatFormatting.ITALIC));
+        if (tooltipFlag.isAdvanced()) {
+            cir.getReturnValue().add(Component.literal("Temperature: " + climate.minTemperature + "..." + climate.maxTemperature + " (C: " + currentTemp + ")"));
+            cir.getReturnValue().add(Component.literal("Downfall: " + climate.minDownfall + "..." + climate.maxDownfall + " (C: " + currentDownfall + ")"));
+        }
+        var isPerfect = true;
+        if (currentTemp < climate.minTemperature) {
+            cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.toocold").withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.ITALIC));
+            isPerfect = false;
+        }
+        if (currentTemp > climate.maxTemperature) {
+            cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.toohot").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.ITALIC));
+            isPerfect = false;
+        }
+        if (currentDownfall < climate.minDownfall) {
+            cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.toodry").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
+            isPerfect = false;
+        }
+        if (currentDownfall > climate.maxDownfall) {
+            cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.toohumid").withStyle(ChatFormatting.DARK_GREEN).withStyle(ChatFormatting.ITALIC));
+            isPerfect = false;
+        }
+        if (isPerfect) {
+            cir.getReturnValue().add(Component.translatable("item.climatic_plants.lore.perfect").withStyle(ChatFormatting.GREEN).withStyle(ChatFormatting.ITALIC));
         }
     }
 }

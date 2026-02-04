@@ -4,16 +4,17 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.biome.Biome;
 
 public final class PreferredClimate {
+    public static final float CLIMATE_MARGIN = 0.1f;
     public float minTemperature;
     public float maxTemperature;
     public float minDownfall;
     public float maxDownfall;
 
     public PreferredClimate(Biome biome) {
-        this.minTemperature = biome.climateSettings.temperature();
-        this.maxTemperature = biome.climateSettings.temperature();
-        this.minDownfall = biome.climateSettings.downfall();
-        this.maxDownfall = biome.climateSettings.downfall();
+        this.minTemperature = biome.climateSettings.temperature() - CLIMATE_MARGIN;
+        this.maxTemperature = biome.climateSettings.temperature() + CLIMATE_MARGIN;
+        this.minDownfall = biome.climateSettings.downfall() - CLIMATE_MARGIN;
+        this.maxDownfall = biome.climateSettings.downfall() + CLIMATE_MARGIN;
     }
     public PreferredClimate() {
         this.minTemperature = Float.MAX_VALUE;
@@ -64,16 +65,16 @@ public final class PreferredClimate {
 
     public void add(Biome biome) {
         if (biome.climateSettings.temperature() < minTemperature) {
-            minTemperature = biome.getBaseTemperature();
+            minTemperature = biome.getBaseTemperature() - CLIMATE_MARGIN;
         }
         if (biome.climateSettings.temperature() > maxTemperature) {
-            maxTemperature = biome.getBaseTemperature();
-        }
-        if (biome.climateSettings.downfall() > maxDownfall) {
-            maxDownfall = biome.climateSettings.downfall();
+            maxTemperature = biome.getBaseTemperature() + CLIMATE_MARGIN;
         }
         if (biome.climateSettings.downfall() < minDownfall) {
-            minDownfall = biome.climateSettings.downfall();
+            minDownfall = biome.climateSettings.downfall() - CLIMATE_MARGIN;
+        }
+        if (biome.climateSettings.downfall() > maxDownfall) {
+            maxDownfall = biome.climateSettings.downfall() + CLIMATE_MARGIN;
         }
     }
 

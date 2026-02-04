@@ -4,5 +4,7 @@
   "block.climatic_plants.dead_fungus": "Dead Fungus",
   "item.climatic_plants.lore.toocold": "It seems that it's too cold for this plant here.",
   "item.climatic_plants.lore.toohot": "It seems that it's too hot for this plant here.",
-  "item.climatic_plants.lore.perfecttemp": "It seems that conditions here are perfect for this plant."
+  "item.climatic_plants.lore.toodry": "It seems that it's too dry for this plant here.",
+  "item.climatic_plants.lore.toohumid": "It seems that it's too humid for this plant here.",
+  "item.climatic_plants.lore.perfect": "It seems that conditions here are perfect for this plant."
 }

@@ -8,26 +8,32 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tags.BiomeTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.grower.TreeGrower;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.feature.*;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.RandomFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.*;
+import net.minecraft.world.level.levelgen.feature.treedecorators.CocoaDecorator;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ClimaticPlants implements ModInitializer {
     public static final String MOD_ID = "climatic_plants";
@@ -49,13 +55,11 @@ public class ClimaticPlants implements ModInitializer {
                     tab.accept(ModBlocks.DEAD_FUNGUS);
                 });
 
-        ServerLifecycleEvents.SERVER_STARTING.register(this::serverStarting);
-        ServerConfigurationConnectionEvents.CONFIGURE.register((packetListener, server) -> {
-            ServerConfigurationNetworking.send(packetListener, new PlantClimatePayload(climates));
-        });
+        ServerLifecycleEvents.SERVER_STARTING.register(this::registerWorldgenBasedPlants);
+        ServerConfigurationConnectionEvents.CONFIGURE.register((packetListener, server) -> ServerConfigurationNetworking.send(packetListener, new PlantClimatePayload(climates)));
     }
 
-    private void serverStarting(MinecraftServer server) {
+    private void registerWorldgenBasedPlants(MinecraftServer server) {
         Registry<Biome> biomeRegistry =
                 server.registryAccess().registryOrThrow(Registries.BIOME);
 
@@ -73,46 +77,112 @@ public class ClimaticPlants implements ModInitializer {
             }
         }
         for (Block block : BuiltInRegistries.BLOCK) {
-            if (block instanceof SaplingBlock saplingBlock) {
-                var tree = saplingBlock.treeGrower;
-                PreferredClimate climate = new PreferredClimate();
-                Registry<ConfiguredFeature<?, ?>> configuredFeatures = server.registryAccess().registry(Registries.CONFIGURED_FEATURE).get();
-                for (var treeFeature : List.of(tree.tree, tree.megaTree, tree.secondaryTree, tree.secondaryMegaTree, tree.flowers, tree.secondaryFlowers)) {
-                    treeFeature.ifPresent(key -> {
-                        ConfiguredFeature<?, ?> feature = configuredFeatures.get(key);
-                        if (feature != null) {
-                            var featureClimate = featureClimates.get(feature.config());
-                            if (featureClimate == null) {
-                                System.out.println(server.registryAccess().registry(Registries.CONFIGURED_FEATURE).get().getKey(feature));
-                                return;
-                            }
-                            climate.add(featureClimate);
-                        }
-                    });
+            List<Optional<ResourceKey<ConfiguredFeature<?, ?>>>> features;
+            switch (block) {
+                case SaplingBlock saplingBlock -> {
+                    var tree = saplingBlock.treeGrower;
+                    features = List.of(tree.tree, tree.megaTree, tree.secondaryTree, tree.secondaryMegaTree, tree.flowers, tree.secondaryFlowers);
                 }
-                climates.put(BuiltInRegistries.BLOCK.getKey(block), climate);
+                case AzaleaBlock ignored -> {
+                    var tree = TreeGrower.AZALEA;
+                    features = List.of(tree.tree, tree.megaTree, tree.secondaryTree, tree.secondaryMegaTree, tree.flowers, tree.secondaryFlowers);
+                }
+                case null, default -> {
+                    continue;
+                }
+            }
+            Registry<ConfiguredFeature<?, ?>> configuredFeatures = server.registryAccess().registry(Registries.CONFIGURED_FEATURE).get();
+            for (var treeFeature : features) {
+                treeFeature.ifPresent(key -> {
+                    ConfiguredFeature<?, ?> feature = configuredFeatures.get(key);
+                    if (feature == null) {
+                        System.out.println("Couldn't find feature for key: " + key);
+                        return;
+                    }
+                    var featureClimate = featureClimates.get(feature.config());
+                    if (featureClimate == null) {
+                        System.out.println("Found feature with no climate data: " + key + " - " + feature);
+                        return;
+                    }
+                    addBlockClimate(block, featureClimate);
+                });
             }
         }
+        addBlockClimate(Blocks.NETHER_WART, biomeRegistry.getTag(BiomeTags.IS_NETHER).get());
+        climates.forEach((k, climate) -> System.out.println(k + ": " + climate));
+    }
+
+    private void addBlockClimate(Block block, PreferredClimate climate) {
+        if (block instanceof BonemealableBlock ||
+                block.getStateDefinition().getPossibleStates().stream().anyMatch(BlockBehaviour.BlockStateBase::isRandomlyTicking)) {
+            climates.computeIfAbsent(BuiltInRegistries.BLOCK.getKey(block), k -> new PreferredClimate()).add(climate);
+        }
+    }
+
+    private void addBlockClimate(Block block, HolderSet.Named<Biome> tag) {
+        tag.stream().forEach(biomeHolder -> addBlockClimate(block, biomeHolder.value()));
+    }
+
+    private void addBlockClimate(Block block, Biome biome) {
+        addBlockClimate(block, new PreferredClimate(biome));
     }
 
     private void processFeature(Map<FeatureConfiguration, PreferredClimate> featureClimates, Biome biome, ConfiguredFeature<?, ? extends Feature<?>> configured) {
         Feature<?> feature = configured.feature();
         FeatureConfiguration config = configured.config();
-        if (feature instanceof RandomSelectorFeature) {
-            var randomConfig = (RandomFeatureConfiguration) config;
-            for (WeightedPlacedFeature weightedPlacedFeature : randomConfig.features) {
-                ConfiguredFeature<?, ?> configuredFeature  = weightedPlacedFeature.feature.value().feature().value();
-                processFeature(featureClimates, biome, configuredFeature);
+        switch (feature) {
+            case TreeFeature ignored -> {
+                var preferredClimate = featureClimates.computeIfAbsent(config, k -> new PreferredClimate(biome));
+                preferredClimate.add(biome);
+                var treeConfig = (TreeConfiguration) config;
+                for (var decorator : treeConfig.decorators) {
+                    if (decorator instanceof CocoaDecorator) {
+                        addBlockClimate(Blocks.COCOA, biome);
+                    }
+                }
             }
-            processFeature(featureClimates, biome, randomConfig.defaultFeature.value().feature().value());
-        }
-        if (feature instanceof TreeFeature) {
-            var preferredClimate = featureClimates.computeIfAbsent(config, k -> new PreferredClimate(biome));
-            preferredClimate.add(biome);
+            case SimpleBlockFeature ignored -> {
+                SimpleBlockConfiguration simpleBlockConfiguration = (SimpleBlockConfiguration) config;
+                Block block = simpleBlockConfiguration.toPlace().getState(RandomSource.create(), BlockPos.ZERO).getBlock();
+                addBlockClimate(block, biome);
+            }
+            case RandomSelectorFeature ignored -> {
+                var randomConfig = (RandomFeatureConfiguration) config;
+                for (WeightedPlacedFeature weightedPlacedFeature : randomConfig.features) {
+                    ConfiguredFeature<?, ?> configuredFeature = weightedPlacedFeature.feature.value().feature().value();
+                    processFeature(featureClimates, biome, configuredFeature);
+                }
+                processFeature(featureClimates, biome, randomConfig.defaultFeature.value().feature().value());
+            }
+            case RootSystemFeature ignored -> {
+                RootSystemConfiguration rootConfig = (RootSystemConfiguration) config;
+                processFeature(featureClimates, biome, rootConfig.treeFeature.value().feature().value());
+            }
+            case RandomPatchFeature ignored -> {
+                RandomPatchConfiguration patchConfig = (RandomPatchConfiguration) config;
+                processFeature(featureClimates, biome, patchConfig.feature().value().feature().value());
+            }
+            case BlockColumnFeature ignored -> {
+                BlockColumnConfiguration columnConfig = (BlockColumnConfiguration) config;
+                for (BlockColumnConfiguration.Layer layer : columnConfig.layers()) {
+                    Block block = layer.state().getState(RandomSource.create(), BlockPos.ZERO).getBlock();
+                    addBlockClimate(block, biome);
+                }
+            }
+            case BambooFeature ignored -> {
+                addBlockClimate(Blocks.BAMBOO, biome);
+                addBlockClimate(Blocks.BAMBOO_SAPLING, biome);
+            }
+            default -> {}
         }
     }
 
     public static PreferredClimate getClimate(Block block) {
         return climates.getOrDefault(BuiltInRegistries.BLOCK.getKey(block), PreferredClimate.of(ConfigUtils.getTemperatureRange(block)));
+    }
+
+    public static PreferredClimate getClimateNullable(Block block) {
+        var range = ConfigUtils.CONFIG.ranges.get(BuiltInRegistries.BLOCK.getKey(block));
+        return climates.getOrDefault(BuiltInRegistries.BLOCK.getKey(block), range == null ? null : PreferredClimate.of(range));
     }
 }

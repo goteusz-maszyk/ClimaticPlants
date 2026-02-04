@@ -22,14 +22,35 @@ public abstract class TreeGrowthMixin {
             method = "growTree",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/levelgen/feature/ConfiguredFeature;place(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos;)Z"
+                    target = "Lnet/minecraft/world/level/levelgen/feature/ConfiguredFeature;place(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos;)Z",
+                    ordinal = 0
             )
     )
-    public boolean generate(ConfiguredFeature<?, ?> instance, WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource randomSource, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) BlockState state) {
+    public boolean generateFour(ConfiguredFeature<?, ?> instance, WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource randomSource, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) BlockState state) {
         var biome = level.getBiomeManager().getBiome(pos);
-        if (PlantKiller.tryKillSapling(biome, ClimaticPlants.getClimate(state.getBlock()), pos, (Level) level, state)) {
+        if (PlantKiller.tryKillSapling(biome, ClimaticPlants.getClimate(state.getBlock()), pos, (Level) level)) {
+            var newState = level.getBlockState(pos);
+            level.setBlock(pos.offset(1, 0, 0), newState, 3);
+            level.setBlock(pos.offset(0, 0, 1), newState, 3);
+            level.setBlock(pos.offset(1, 0, 1), newState, 3);
             return true;
         }
-        return instance.place(level, chunkGenerator, randomSource, pos);
+        return original.call(instance, level, chunkGenerator, randomSource, pos);
+    }
+
+    @WrapOperation(
+            method = "growTree",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/levelgen/feature/ConfiguredFeature;place(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos;)Z",
+                    ordinal = 1
+            )
+    )
+    public boolean generateSingle(ConfiguredFeature<?, ?> instance, WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource randomSource, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) BlockState state) {
+        var biome = level.getBiomeManager().getBiome(pos);
+        if (PlantKiller.tryKillSapling(biome, ClimaticPlants.getClimate(state.getBlock()), pos, (Level) level)) {
+            return true;
+        }
+        return original.call(instance, level, chunkGenerator, randomSource, pos);
     }
 }

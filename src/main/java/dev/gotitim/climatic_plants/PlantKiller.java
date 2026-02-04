@@ -8,13 +8,13 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class PlantKiller {
-    public static boolean tryKillSapling(Holder<Biome> biome, PreferredClimate climate, BlockPos pos, Level world, BlockState originalState) {
+    public static boolean tryKillSapling(Holder<Biome> biome, PreferredClimate climate, BlockPos pos, Level world) {
         if (biome.is(BiomeTags.IS_OVERWORLD)) {
             float tempValue = biome.value().getHeightAdjustedTemperature(pos);
             float min = climate.minTemperature;
@@ -67,16 +67,11 @@ public class PlantKiller {
     }
 
     public static boolean randomDeath(float difference) {
-        var r = Math.random();
-        return difference/ConfigUtils.CONFIG.sapling_survival_margin > r;
+        return difference/ConfigUtils.CONFIG.sapling_survival_margin > Math.random();
     }
 
-    public static boolean tryCancelCrop(Level level, BlockPos pos, Block block) {
+    public static boolean tryCancelCrop(Level level, BlockPos pos, CropBlock block) {
         Holder<Biome> biome = level.getBiomeManager().getBiome(pos);
-        if (!biome.is(BiomeTags.IS_OVERWORLD)){
-            return true;
-        }
-
         var tempRange = ConfigUtils.getTemperatureRange(block);
         float tempValue = biome.value().getHeightAdjustedTemperature(pos);
         float min = tempRange[0];
@@ -91,9 +86,7 @@ public class PlantKiller {
                     return true;
                 }
             } else {
-                if (block instanceof CropBlock) {
-                    level.setBlockAndUpdate(pos, ModBlocks.FROZEN_CROP.defaultBlockState());
-                }
+                level.setBlockAndUpdate(pos, ModBlocks.FROZEN_CROP.defaultBlockState());
                 return true;
             }
 
@@ -101,11 +94,26 @@ public class PlantKiller {
             if (overheatVal < ConfigUtils.CONFIG.crop_survival_margin) {
                 return Math.random() > overheatVal / ConfigUtils.CONFIG.crop_survival_margin;
             } else {
-                if (block instanceof CropBlock) {
-                    level.setBlockAndUpdate(pos, ModBlocks.BURNT_CROP.defaultBlockState());
-                }
+                level.setBlockAndUpdate(pos, ModBlocks.BURNT_CROP.defaultBlockState());
                 return true;
             }
         return false;
+    }
+
+    public static boolean tryCancelGeneral(Level level, BlockPos blockPos, BlockState state) {
+        PreferredClimate climate = ClimaticPlants.getClimateNullable(state.getBlock());
+        if (climate == null) {
+            return false;
+        }
+        Holder<Biome> biome = level.getBiome(blockPos);
+        if (state.getBlock() instanceof SaplingBlock) {
+            return tryKillSapling(biome, climate, blockPos, level);
+        }
+        if (state.getBlock() instanceof CropBlock crop) {
+            return tryCancelCrop(level, blockPos, crop);
+        }
+        var currentTemp = biome.value().getHeightAdjustedTemperature(blockPos);
+        var downfall = biome.value().climateSettings.downfall();
+        return currentTemp < climate.minTemperature || currentTemp > climate.maxTemperature || downfall < climate.minDownfall || downfall > climate.maxDownfall;
     }
 }
