@@ -1,6 +1,6 @@
 package dev.gotitim.climatic_plants.mixin;
 
-import dev.gotitim.climatic_plants.ClimaticPlants;
+import dev.gotitim.climatic_plants.client.ClimaticPlantsClient;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -27,7 +27,7 @@ public abstract class BlockItemMixin {
         if (player == null) {
             return;
         }
-        var climate = ClimaticPlants.getClimateNullable(getItem() instanceof BlockItem blockItem ? blockItem.getBlock() : null);
+        var climate = ClimaticPlantsClient.getClimate(getItem() instanceof BlockItem blockItem ? blockItem.getBlock() : null);
         if (climate == null) {
             return;
         }
@@ -35,8 +35,8 @@ public abstract class BlockItemMixin {
         float currentDownfall = player.level().getBiome(player.blockPosition()).value().climateSettings.downfall();
 
         if (tooltipFlag.isAdvanced()) {
-            cir.getReturnValue().add(Component.literal("Temperature: " + climate.minTemperature + "..." + climate.maxTemperature + " (C: " + currentTemp + ")"));
-            cir.getReturnValue().add(Component.literal("Downfall: " + climate.minDownfall + "..." + climate.maxDownfall + " (C: " + currentDownfall + ")"));
+            cir.getReturnValue().add(Component.literal("Temperature: " + climate.minTemperature + "..." + climate.maxTemperature + " (C: " + currentTemp + ")").withStyle(ChatFormatting.DARK_GRAY));
+            cir.getReturnValue().add(Component.literal("Downfall: " + climate.minDownfall + "..." + climate.maxDownfall + " (C: " + currentDownfall + ")").withStyle(ChatFormatting.DARK_GRAY));
         }
         var isPerfect = true;
         if (currentTemp < climate.minTemperature) {

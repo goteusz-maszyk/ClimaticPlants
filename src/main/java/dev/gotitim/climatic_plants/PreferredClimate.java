@@ -1,5 +1,8 @@
 package dev.gotitim.climatic_plants;
 
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonElement;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonObject;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonPrimitive;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.biome.Biome;
 
@@ -36,15 +39,6 @@ public final class PreferredClimate {
                 buffer.readFloat(),
                 buffer.readFloat(),
                 buffer.readFloat()
-        );
-    }
-
-    public static PreferredClimate of(float[] temperatureRange) {
-        return new PreferredClimate(
-                temperatureRange[0],
-                temperatureRange[1],
-                Float.MIN_VALUE,
-                Float.MAX_VALUE
         );
     }
 
@@ -86,5 +80,23 @@ public final class PreferredClimate {
                 minDownfall + ".." + maxDownfall +
                 "}";
 
+    }
+
+    public static PreferredClimate deserialise(JsonObject jsonObject) {
+        float minTemperature = jsonObject.getFloat("minTemperature", -Float.MAX_VALUE);
+        float maxTemperature = jsonObject.getFloat("maxTemperature", Float.MAX_VALUE);
+        float minDownfall = jsonObject.getFloat("minDownfall", -Float.MAX_VALUE);
+        float maxDownfall = jsonObject.getFloat("maxDownfall", Float.MAX_VALUE);
+        System.out.println("Deserialized PreferredClimate: " + minTemperature + ", " + maxTemperature + ", " + minDownfall + ", " + maxDownfall);
+        return new PreferredClimate(minTemperature, maxTemperature, minDownfall, maxDownfall);
+    }
+
+    public JsonElement serialise() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.put("minTemperature", new JsonPrimitive(minTemperature));
+        jsonObject.put("maxTemperature", new JsonPrimitive(maxTemperature));
+        jsonObject.put("minDownfall", new JsonPrimitive(minDownfall));
+        jsonObject.put("maxDownfall", new JsonPrimitive(maxDownfall));
+        return jsonObject;
     }
 }

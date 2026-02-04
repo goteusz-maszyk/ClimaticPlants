@@ -1,14 +1,21 @@
 package dev.gotitim.climatic_plants.client;
 
-import dev.gotitim.climatic_plants.ClimaticPlants;
 import dev.gotitim.climatic_plants.ModBlocks;
+import dev.gotitim.climatic_plants.PreferredClimate;
 import dev.gotitim.climatic_plants.network.PlantClimatePayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClimaticPlantsClient implements ClientModInitializer {
+    public static final Map<ResourceLocation, PreferredClimate> climates = new HashMap<>();
 
     @Override
     public void onInitializeClient() {
@@ -25,9 +32,13 @@ public class ClimaticPlantsClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.FROZEN_CROP, RenderType.cutout());
 
         ClientConfigurationNetworking.registerGlobalReceiver(PlantClimatePayload.ID, (payload, context) -> {
-            ClimaticPlants.climates.clear();
-            ClimaticPlants.climates.putAll(payload.data());
+            ClimaticPlantsClient.climates.clear();
+            ClimaticPlantsClient.climates.putAll(payload.data());
         });
 
+    }
+
+    public static PreferredClimate getClimate(Block block) {
+        return climates.get(BuiltInRegistries.BLOCK.getKey(block));
     }
 }

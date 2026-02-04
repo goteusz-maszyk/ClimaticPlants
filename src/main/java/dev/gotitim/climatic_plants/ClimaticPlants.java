@@ -1,6 +1,11 @@
 package dev.gotitim.climatic_plants;
 
 import dev.gotitim.climatic_plants.network.PlantClimatePayload;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Jankson;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonObject;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.JsonPrimitive;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -43,6 +48,11 @@ public class ClimaticPlants implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        AutoConfig.register(ClimaticPlantsConfig.class, (clazz, factory) -> new JanksonConfigSerializer<>(clazz, factory, Jankson.builder()
+                .registerDeserializer(JsonObject.class, PreferredClimate.class, (jsonObject, marshaller1) -> PreferredClimate.deserialise(jsonObject))
+                .registerSerializer(PreferredClimate.class, (climate, marshaller) -> climate.serialise())
+                .registerDeserializer(JsonPrimitive.class, ResourceLocation.class, (prim, mar) -> ResourceLocation.parse(prim.asString())).build()));
+
         PayloadTypeRegistry.configurationS2C().register(PlantClimatePayload.ID, PlantClimatePayload.CODEC);
         ModBlocks.init();
 
@@ -101,7 +111,6 @@ public class ClimaticPlants implements ModInitializer {
                     }
                     var featureClimate = featureClimates.get(feature.config());
                     if (featureClimate == null) {
-                        System.out.println("Found feature with no climate data: " + key + " - " + feature);
                         return;
                     }
                     addBlockClimate(block, featureClimate);
@@ -110,7 +119,10 @@ public class ClimaticPlants implements ModInitializer {
         }
         addBlockClimate(Blocks.NETHER_WART, biomeRegistry.getTag(BiomeTags.IS_NETHER).get());
         addBlockClimate(Blocks.BIRCH_SAPLING, biomeRegistry.get(Biomes.BIRCH_FOREST)); // Adding manually because birch forests generate ungrowable variant
-        climates.forEach((k, climate) -> System.out.println(k + ": " + climate));
+        var config = getConfig();
+        for (ResourceLocation blockId : config.ranges.keySet()) {
+            climates.put(blockId, config.ranges.get(blockId));
+        }
     }
 
     private void addBlockClimate(Block block, PreferredClimate climate) {
@@ -177,13 +189,11 @@ public class ClimaticPlants implements ModInitializer {
             default -> {}
         }
     }
-
     public static PreferredClimate getClimate(Block block) {
-        return climates.getOrDefault(BuiltInRegistries.BLOCK.getKey(block), PreferredClimate.of(ConfigUtils.getTemperatureRange(block)));
+        return climates.get(BuiltInRegistries.BLOCK.getKey(block));
     }
 
-    public static PreferredClimate getClimateNullable(Block block) {
-        var range = ConfigUtils.CONFIG.ranges.get(BuiltInRegistries.BLOCK.getKey(block));
-        return climates.getOrDefault(BuiltInRegistries.BLOCK.getKey(block), range == null ? null : PreferredClimate.of(range));
+    public static ClimaticPlantsConfig getConfig() {
+        return AutoConfig.getConfigHolder(ClimaticPlantsConfig.class).getConfig();
     }
 }

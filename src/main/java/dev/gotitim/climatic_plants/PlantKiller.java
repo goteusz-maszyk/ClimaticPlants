@@ -16,10 +16,11 @@ public class PlantKiller {
     public static void killSapling(Level world, BlockPos pos, float difference) {
         float pitch;
         BlockState state;
-        if (difference < -ConfigUtils.CONFIG.sapling_survival_margin*2.5) {
+        var config = ClimaticPlants.getConfig();
+        if (difference < -config.sapling_survival_margin*2.5) {
             state = ModBlocks.FROZEN_BUSH.defaultBlockState();
             pitch = 1.5f;
-        } else if (difference > ConfigUtils.CONFIG.sapling_survival_margin*2.5) {
+        } else if (difference > config.sapling_survival_margin*2.5) {
             state = Blocks.DEAD_BUSH.defaultBlockState();
             pitch = 0.5f;
         } else {
@@ -38,12 +39,9 @@ public class PlantKiller {
         world.playSound(null, pos, SoundEvents.FUNGUS_BREAK, SoundSource.BLOCKS, 1f, 1.5f);
     }
 
-    public static boolean randomDeath(float difference) {
-        return difference/ConfigUtils.CONFIG.sapling_survival_margin > Math.random();
-    }
-
     public static boolean tryCancelGeneral(Level level, BlockPos blockPos, BlockState state) {
-        PreferredClimate climate = ClimaticPlants.getClimateNullable(state.getBlock());
+        var config = ClimaticPlants.getConfig();
+        PreferredClimate climate = ClimaticPlants.getClimate(state.getBlock());
         if (climate == null) {
             return false;
         }
@@ -55,11 +53,11 @@ public class PlantKiller {
         var overheatVal = currentTemp - climate.maxTemperature;
 
         if (state.getBlock() instanceof SaplingBlock) {
-            if (freezeVal > 0 && randomDeath(freezeVal)) {
+            if (freezeVal > 0 && freezeVal/config.sapling_survival_margin > Math.random()) {
                 killSapling(level, blockPos, -freezeVal);
                 return true;
             }
-            if (overheatVal > 0 && randomDeath(overheatVal)) {
+            if (overheatVal > 0 && overheatVal/config.sapling_survival_margin > Math.random()) {
                 killSapling(level, blockPos, overheatVal);
                 return true;
             }
@@ -67,8 +65,8 @@ public class PlantKiller {
         }
         if (state.getBlock() instanceof CropBlock) {
             if (freezeVal > 0)
-                if (freezeVal < ConfigUtils.CONFIG.crop_survival_margin) {
-                    if (Math.random() > freezeVal / ConfigUtils.CONFIG.crop_survival_margin) {
+                if (freezeVal < config.crop_survival_margin) {
+                    if (Math.random() > freezeVal / config.crop_survival_margin) {
                         return true;
                     }
                 } else {
@@ -77,8 +75,8 @@ public class PlantKiller {
                 }
 
             if (overheatVal > 0)
-                if (overheatVal < ConfigUtils.CONFIG.crop_survival_margin) {
-                    return Math.random() > overheatVal / ConfigUtils.CONFIG.crop_survival_margin;
+                if (overheatVal < config.crop_survival_margin) {
+                    return Math.random() > overheatVal / config.crop_survival_margin;
                 } else {
                     level.setBlockAndUpdate(blockPos, ModBlocks.BURNT_CROP.defaultBlockState());
                     return true;
