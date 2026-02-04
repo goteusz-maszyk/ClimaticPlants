@@ -87,7 +87,6 @@ public final class PreferredClimate {
         float maxTemperature = jsonObject.getFloat("maxTemperature", Float.MAX_VALUE);
         float minDownfall = jsonObject.getFloat("minDownfall", -Float.MAX_VALUE);
         float maxDownfall = jsonObject.getFloat("maxDownfall", Float.MAX_VALUE);
-        System.out.println("Deserialized PreferredClimate: " + minTemperature + ", " + maxTemperature + ", " + minDownfall + ", " + maxDownfall);
         return new PreferredClimate(minTemperature, maxTemperature, minDownfall, maxDownfall);
     }
 
