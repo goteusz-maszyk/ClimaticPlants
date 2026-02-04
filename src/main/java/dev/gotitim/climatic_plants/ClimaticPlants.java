@@ -22,6 +22,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -96,7 +97,6 @@ public class ClimaticPlants implements ModInitializer {
                 treeFeature.ifPresent(key -> {
                     ConfiguredFeature<?, ?> feature = configuredFeatures.get(key);
                     if (feature == null) {
-                        System.out.println("Couldn't find feature for key: " + key);
                         return;
                     }
                     var featureClimate = featureClimates.get(feature.config());
@@ -109,6 +109,7 @@ public class ClimaticPlants implements ModInitializer {
             }
         }
         addBlockClimate(Blocks.NETHER_WART, biomeRegistry.getTag(BiomeTags.IS_NETHER).get());
+        addBlockClimate(Blocks.BIRCH_SAPLING, biomeRegistry.get(Biomes.BIRCH_FOREST)); // Adding manually because birch forests generate ungrowable variant
         climates.forEach((k, climate) -> System.out.println(k + ": " + climate));
     }
 

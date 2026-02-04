@@ -6,8 +6,7 @@
   "mixins": [
     "BoneMealMixin",
     "FungusBlockGrowthMixin",
-    "RandomTickMixin",
-    "TreeGrowthMixin"
+    "RandomTickMixin"
   ],
   "client": [
     "BlockItemMixin"

@@ -5,7 +5,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
@@ -14,33 +13,6 @@ import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class PlantKiller {
-    public static boolean tryKillSapling(Holder<Biome> biome, PreferredClimate climate, BlockPos pos, Level world) {
-        if (biome.is(BiomeTags.IS_OVERWORLD)) {
-            float tempValue = biome.value().getHeightAdjustedTemperature(pos);
-            float min = climate.minTemperature;
-            float max = climate.maxTemperature;
-
-            var freezeVal = min - tempValue;
-            var overheatVal = tempValue - max;
-
-            if (freezeVal > 0 && randomDeath(freezeVal)) {
-                killSapling(world, pos, -freezeVal);
-                return true;
-            }
-            if (overheatVal > 0 && randomDeath(overheatVal)) {
-                killSapling(world, pos, overheatVal);
-                return true;
-            }
-        } else if (biome.is(BiomeTags.IS_END)) {
-            killSapling(world, pos, -1f);
-            return true;
-        } else if (biome.is(BiomeTags.IS_NETHER)) {
-            killSapling(world, pos, 2.5f);
-            return true;
-        }
-        return false;
-    }
-
     public static void killSapling(Level world, BlockPos pos, float difference) {
         float pitch;
         BlockState state;
@@ -70,50 +42,49 @@ public class PlantKiller {
         return difference/ConfigUtils.CONFIG.sapling_survival_margin > Math.random();
     }
 
-    public static boolean tryCancelCrop(Level level, BlockPos pos, CropBlock block) {
-        Holder<Biome> biome = level.getBiomeManager().getBiome(pos);
-        var tempRange = ConfigUtils.getTemperatureRange(block);
-        float tempValue = biome.value().getHeightAdjustedTemperature(pos);
-        float min = tempRange[0];
-        float max = tempRange[1];
-
-        var freezeVal = min - tempValue;
-        var overheatVal = tempValue - max;
-
-        if (freezeVal > 0)
-            if (freezeVal < ConfigUtils.CONFIG.crop_survival_margin) {
-                if (Math.random() > freezeVal / ConfigUtils.CONFIG.crop_survival_margin) {
-                    return true;
-                }
-            } else {
-                level.setBlockAndUpdate(pos, ModBlocks.FROZEN_CROP.defaultBlockState());
-                return true;
-            }
-
-        if (overheatVal > 0)
-            if (overheatVal < ConfigUtils.CONFIG.crop_survival_margin) {
-                return Math.random() > overheatVal / ConfigUtils.CONFIG.crop_survival_margin;
-            } else {
-                level.setBlockAndUpdate(pos, ModBlocks.BURNT_CROP.defaultBlockState());
-                return true;
-            }
-        return false;
-    }
-
     public static boolean tryCancelGeneral(Level level, BlockPos blockPos, BlockState state) {
         PreferredClimate climate = ClimaticPlants.getClimateNullable(state.getBlock());
         if (climate == null) {
             return false;
         }
         Holder<Biome> biome = level.getBiome(blockPos);
+        float currentTemp = biome.value().getHeightAdjustedTemperature(blockPos);
+        float downfall = biome.value().climateSettings.downfall();
+
+        var freezeVal = climate.minTemperature - currentTemp;
+        var overheatVal = currentTemp - climate.maxTemperature;
+
         if (state.getBlock() instanceof SaplingBlock) {
-            return tryKillSapling(biome, climate, blockPos, level);
+            if (freezeVal > 0 && randomDeath(freezeVal)) {
+                killSapling(level, blockPos, -freezeVal);
+                return true;
+            }
+            if (overheatVal > 0 && randomDeath(overheatVal)) {
+                killSapling(level, blockPos, overheatVal);
+                return true;
+            }
+            return downfall < climate.minDownfall || downfall > climate.maxDownfall;
         }
-        if (state.getBlock() instanceof CropBlock crop) {
-            return tryCancelCrop(level, blockPos, crop);
+        if (state.getBlock() instanceof CropBlock) {
+            if (freezeVal > 0)
+                if (freezeVal < ConfigUtils.CONFIG.crop_survival_margin) {
+                    if (Math.random() > freezeVal / ConfigUtils.CONFIG.crop_survival_margin) {
+                        return true;
+                    }
+                } else {
+                    level.setBlockAndUpdate(blockPos, ModBlocks.FROZEN_CROP.defaultBlockState());
+                    return true;
+                }
+
+            if (overheatVal > 0)
+                if (overheatVal < ConfigUtils.CONFIG.crop_survival_margin) {
+                    return Math.random() > overheatVal / ConfigUtils.CONFIG.crop_survival_margin;
+                } else {
+                    level.setBlockAndUpdate(blockPos, ModBlocks.BURNT_CROP.defaultBlockState());
+                    return true;
+                }
+            return downfall < climate.minDownfall || downfall > climate.maxDownfall;
         }
-        var currentTemp = biome.value().getHeightAdjustedTemperature(blockPos);
-        var downfall = biome.value().climateSettings.downfall();
-        return currentTemp < climate.minTemperature || currentTemp > climate.maxTemperature || downfall < climate.minDownfall || downfall > climate.maxDownfall;
+        return freezeVal > 0 || overheatVal > 0 || downfall < climate.minDownfall || downfall > climate.maxDownfall;
     }
 }
