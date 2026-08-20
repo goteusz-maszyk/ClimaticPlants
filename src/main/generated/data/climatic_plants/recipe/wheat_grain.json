@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:wheat",
+    "#c:tools/knife"
+  ],
+  "result": {
+    "id": "climatic_plants:wheat_grain"
+  }
+}

@@ -1,15 +1,13 @@
 {
   "required": true,
-  "minVersion": "0.8",
   "package": "dev.gotitim.climatic_plants.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "mixins": [
     "BoneMealMixin",
-    "FungusBlockGrowthMixin",
-    "RandomTickMixin"
-  ],
-  "client": [
-    "BlockItemMixin"
+    "CropBlockMixin",
+    "ItemsMixin",
+    "CropGrowthMixin",
+    "ResultSlotMixin"
   ],
   "injectors": {
     "defaultRequire": 1

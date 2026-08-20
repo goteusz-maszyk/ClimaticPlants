@@ -1,5 +1,9 @@
 # User-specific stuff
 .idea/
+bin/
+.project
+.classpath
+.settings
 
 src/main/generated/.cache/
 

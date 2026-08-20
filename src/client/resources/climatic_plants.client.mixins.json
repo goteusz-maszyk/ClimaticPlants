@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "dev.gotitim.climatic_plants.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "client.BlockItemMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

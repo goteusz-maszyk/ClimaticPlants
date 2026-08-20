@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "climatic_plants:block/crop/potatoes_dead_young"
+  }
+}

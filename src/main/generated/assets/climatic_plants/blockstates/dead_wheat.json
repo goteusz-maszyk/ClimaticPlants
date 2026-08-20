@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "mature=false": {
+      "model": "climatic_plants:block/dead_wheat_young"
+    },
+    "mature=true": {
+      "model": "climatic_plants:block/dead_wheat"
+    }
+  }
+}

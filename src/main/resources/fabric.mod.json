@@ -15,7 +15,7 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "dev.gotitim.climatic_plants.client.ClimaticPlantsClient"
+      "dev.gotitim.climatic_plants.ClimaticPlantsClient"
     ],
     "main": [
       "dev.gotitim.climatic_plants.ClimaticPlants"
@@ -25,13 +25,16 @@
     ]
   },
   "mixins": [
-    "climatic_plants.mixins.json"
+    "climatic_plants.mixins.json",
+    {
+      "config": "climatic_plants.client.mixins.json",
+      "environment": "client"
+    }
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
-    "fabric-api": ">=${fabric_version}",
-    "minecraft": "${minecraft_version}",
-    "cloth-config": ">=${cloth_version}"
+    "fabric-api": ">=${fabric_api_version}",
+    "minecraft": "${minecraft_version}"
   },
   "accessWidener": "climatic_plants.accesswidener"
 }

@@ -1,12 +1,3 @@
-accessWidener v1 named
-accessible method net/minecraft/world/level/biome/Biome getHeightAdjustedTemperature (Lnet/minecraft/core/BlockPos;)F
-accessible field net/minecraft/world/level/biome/Biome climateSettings Lnet/minecraft/world/level/biome/Biome$ClimateSettings;
-accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
-accessible field net/minecraft/world/level/block/SaplingBlock treeGrower Lnet/minecraft/world/level/block/grower/TreeGrower;
-accessible field net/minecraft/world/level/block/grower/TreeGrower tree Ljava/util/Optional;
-accessible field net/minecraft/world/level/block/grower/TreeGrower secondaryTree Ljava/util/Optional;
-accessible field net/minecraft/world/level/block/grower/TreeGrower megaTree Ljava/util/Optional;
-accessible field net/minecraft/world/level/block/grower/TreeGrower secondaryMegaTree Ljava/util/Optional;
-accessible field net/minecraft/world/level/block/grower/TreeGrower flowers Ljava/util/Optional;
-accessible field net/minecraft/world/level/block/grower/TreeGrower secondaryFlowers Ljava/util/Optional;
-accessible field net/minecraft/world/level/block/FungusBlock feature Lnet/minecraft/resources/ResourceKey;
+accessWidener v1 official
+accessible method net/minecraft/world/level/biome/Biome getHeightAdjustedTemperature (Lnet/minecraft/core/BlockPos;I)F
+accessible method net/minecraft/world/level/block/CropBlock getGrowthSpeed (Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)F

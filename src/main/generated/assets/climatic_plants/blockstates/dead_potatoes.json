@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "mature=false": {
+      "model": "climatic_plants:block/dead_potatoes_young"
+    },
+    "mature=true": {
+      "model": "climatic_plants:block/dead_potatoes"
+    }
+  }
+}
