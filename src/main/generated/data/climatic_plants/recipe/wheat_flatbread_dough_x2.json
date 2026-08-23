@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "wheat_flatbread_dough",
+  "ingredients": [
+    "climatic_plants:wheat_flour",
+    "climatic_plants:wheat_flour",
+    "minecraft:water_bucket"
+  ],
+  "result": {
+    "count": 8,
+    "id": "climatic_plants:wheat_flatbread_dough"
+  }
+}

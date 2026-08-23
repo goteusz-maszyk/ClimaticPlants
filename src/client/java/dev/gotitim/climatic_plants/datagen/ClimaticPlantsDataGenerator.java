@@ -7,6 +7,7 @@ public class ClimaticPlantsDataGenerator implements DataGeneratorEntrypoint {
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
 		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
+		pack.addProvider(ModSoundsProvider::new);
 		pack.addProvider(ModModelProvider::new);
 
 		pack.addProvider(ModLangProvider.EnUS::new);

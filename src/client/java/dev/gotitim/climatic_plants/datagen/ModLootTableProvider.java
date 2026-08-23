@@ -1,5 +1,6 @@
 package dev.gotitim.climatic_plants.datagen;
 
+import dev.gotitim.climatic_plants.content.ClimaticBlocks;
 import dev.gotitim.climatic_plants.content.crop.Crop;
 import dev.gotitim.climatic_plants.content.crop.DeadCropBlock;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -57,5 +58,7 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
                                        )
             );
         }
+
+        add(ClimaticBlocks.QUERN, createSingleItemTable(ClimaticBlocks.QUERN));
     }
 }

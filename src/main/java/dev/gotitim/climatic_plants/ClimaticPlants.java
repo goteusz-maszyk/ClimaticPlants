@@ -2,6 +2,8 @@ package dev.gotitim.climatic_plants;
 
 import dev.gotitim.climatic_plants.content.ClimaticBlocks;
 import dev.gotitim.climatic_plants.content.ClimaticItems;
+import dev.gotitim.climatic_plants.content.ClimaticSounds;
+import dev.gotitim.climatic_plants.content.quern.QuernRecipe;
 import dev.gotitim.climatic_plants.data.ClimateRange;
 import dev.gotitim.climatic_plants.data.UniversalDataManager;
 import net.fabricmc.api.ModInitializer;
@@ -27,6 +29,8 @@ public class ClimaticPlants implements ModInitializer {
     public void onInitialize() {
         ClimaticItems.init();
         ClimaticBlocks.init();
+        ClimaticSounds.init();
+        QuernRecipe.init();
         climateRanges.register();
 
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(output -> {

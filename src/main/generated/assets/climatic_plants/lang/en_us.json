@@ -1,3 +1,20 @@
 {
-  "item.climatic_plants.carrot_seeds": "Carrot Seeds"
+  "block.climatic_plants.quern": "Quern",
+  "block.minecraft.carrots": "Carrot Seeds",
+  "item.climatic_plants.carrot_seeds": "Carrot Seeds",
+  "item.climatic_plants.copper_knife": "Copper Knife",
+  "item.climatic_plants.diamond_knife": "Diamond Knife",
+  "item.climatic_plants.flint_knife": "Flint Knife",
+  "item.climatic_plants.handstone": "Handstone",
+  "item.climatic_plants.iron_knife": "Iron Knife",
+  "item.climatic_plants.quern": "Quern",
+  "item.climatic_plants.wheat_flatbread": "Wheat Flatbread",
+  "item.climatic_plants.wheat_flatbread_dough": "Wheat Flatbread Dough",
+  "item.climatic_plants.wheat_flour": "Wheat Flour",
+  "item.climatic_plants.wheat_grain": "Wheat Grain",
+  "subtitles.climatic_plants.block.quern.drag": "Quern grinding",
+  "tag.block.climatic_plants.mineable.knife": "Mineable with knife",
+  "tag.item.c.stones.polished": "Polished stones",
+  "tag.item.c.tools.knife": "Knives",
+  "tag.item.climatic_plants.flint_tool_materials": "Flint tool materials"
 }

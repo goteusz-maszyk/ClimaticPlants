@@ -1,0 +1,7 @@
+{
+  "type": "climatic_plants:quern",
+  "ingredient": "climatic_plants:wheat_grain",
+  "result": {
+    "id": "climatic_plants:wheat_flour"
+  }
+}

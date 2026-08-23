@@ -1,3 +1,12 @@
 {
-  "item.climatic_plants.carrot_seeds": "Nasiona marchewki"
+  "block.climatic_plants.quern": "Żarno",
+  "block.minecraft.carrots": "Nasiona marchewki",
+  "item.climatic_plants.carrot_seeds": "Nasiona marchewki",
+  "item.climatic_plants.copper_knife": "Miedziany nóż",
+  "item.climatic_plants.diamond_knife": "Diamentowy nóż",
+  "item.climatic_plants.flint_knife": "Krzemienny nóż",
+  "item.climatic_plants.handstone": "Kamień ręczny",
+  "item.climatic_plants.iron_knife": "Żelazny nóż",
+  "item.climatic_plants.quern": "Żarno",
+  "subtitles.climatic_plants.block.quern.drag": "Żarna mielą"
 }

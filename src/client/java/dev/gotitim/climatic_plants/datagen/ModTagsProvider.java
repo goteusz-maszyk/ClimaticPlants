@@ -48,6 +48,15 @@ public class ModTagsProvider {
                     .add(ModItemIds.COPPER_KNIFE)
                     .add(ModItemIds.IRON_KNIFE)
                     .add(ModItemIds.DIAMOND_KNIFE);
+
+            builder(ClimaticTags.POLISHED_STONES)
+                    .add(BlockItemIds.POLISHED_ANDESITE)
+                    .add(BlockItemIds.POLISHED_GRANITE)
+                    .add(BlockItemIds.POLISHED_DIORITE)
+                    .add(BlockItemIds.POLISHED_SULFUR)
+                    .add(BlockItemIds.POLISHED_TUFF)
+                    .add(BlockItemIds.POLISHED_CINNABAR)
+                    .add(BlockItemIds.POLISHED_DEEPSLATE);
         }
     }
 }

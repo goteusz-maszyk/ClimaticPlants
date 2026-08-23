@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "food",
+  "experience": 0.35,
+  "ingredient": "climatic_plants:wheat_flatbread_dough",
+  "result": {
+    "id": "climatic_plants:wheat_flatbread"
+  }
+}

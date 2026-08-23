@@ -9,11 +9,15 @@ import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.util.random.WeightedList;
 import org.jspecify.annotations.NonNull;
 
 public class ModModelProvider extends FabricModelProvider {
@@ -45,16 +49,35 @@ public class ModModelProvider extends FabricModelProvider {
                                          )
             );
         }
+        generator.blockStateOutput.accept(
+                MultiVariantGenerator.dispatch(
+                        ClimaticBlocks.QUERN,
+                        new MultiVariant(WeightedList.of(new Variant(ClimaticPlants.identifier("block/quern"))))
+                )
+        );
     }
 
     @Override
     public void generateItemModels(ItemModelGenerators generator) {
         generator.generateFlatItem(ClimaticItems.CARROT_SEEDS, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(ClimaticItems.WHEAT_GRAIN, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(ClimaticItems.WHEAT_FLOUR, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(ClimaticItems.WHEAT_FLATBREAD_DOUGH, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(ClimaticItems.WHEAT_FLATBREAD, ModelTemplates.FLAT_ITEM);
 
         generator.generateFlatItem(ClimaticItems.FLINT_KNIFE, ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(ClimaticItems.IRON_KNIFE, ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(ClimaticItems.COPPER_KNIFE, ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(ClimaticItems.DIAMOND_KNIFE, ModelTemplates.FLAT_HANDHELD_ITEM);
+
+        generator.itemModelOutput.accept(
+                ClimaticItems.QUERN,
+                ItemModelUtils.plainModel(ClimaticPlants.identifier("block/quern"))
+        );
+
+        generator.itemModelOutput.accept(
+                ClimaticItems.HANDSTONE,
+                ItemModelUtils.plainModel(ClimaticPlants.identifier("item/handstone"))
+        );
     }
 }

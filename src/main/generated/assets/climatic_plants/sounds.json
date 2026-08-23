@@ -1,0 +1,9 @@
+{
+  "block.quern.drag": {
+    "sounds": [
+      "climatic_plants:block/quern/drag1",
+      "climatic_plants:block/quern/drag2"
+    ],
+    "subtitle": "sound.climatic_plants.block.quern.drag"
+  }
+}

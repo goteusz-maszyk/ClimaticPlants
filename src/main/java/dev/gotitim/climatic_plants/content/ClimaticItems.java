@@ -22,38 +22,61 @@ import java.util.List;
 import java.util.function.Function;
 
 public class ClimaticItems {
-    public static final ToolMaterial FLINT = new ToolMaterial(BlockTags.INCORRECT_FOR_STONE_TOOL, 131, 4.0F, 1.0F, 5, ClimaticTags.FLINT_TOOL_MATERIALS);
+    public static final ToolMaterial FLINT = new ToolMaterial(BlockTags.INCORRECT_FOR_STONE_TOOL, 131, 4.0F, 1.0F, 5,
+            ClimaticTags.FLINT_TOOL_MATERIALS
+    );
 
-    public static final Item CARROT_SEEDS = registerItem(
-            "carrot_seeds",
+    public static final Item CARROT_SEEDS = registerItem("carrot_seeds",
             p -> new BlockItem(Blocks.CARROTS, p.useItemDescriptionPrefix())
     );
 
     public static final Item FLINT_KNIFE = registerItem(ModItemIds.FLINT_KNIFE, KnifeItem::new, knifeItem(FLINT));
-    public static final Item COPPER_KNIFE = registerItem(ModItemIds.COPPER_KNIFE, KnifeItem::new, knifeItem(ToolMaterial.COPPER));
-    public static final Item IRON_KNIFE = registerItem(ModItemIds.IRON_KNIFE, KnifeItem::new, knifeItem(ToolMaterial.IRON));
-    public static final Item DIAMOND_KNIFE = registerItem(ModItemIds.DIAMOND_KNIFE, KnifeItem::new, knifeItem(ToolMaterial.DIAMOND));
+    public static final Item COPPER_KNIFE = registerItem(ModItemIds.COPPER_KNIFE, KnifeItem::new,
+            knifeItem(ToolMaterial.COPPER)
+    );
+    public static final Item IRON_KNIFE = registerItem(ModItemIds.IRON_KNIFE, KnifeItem::new,
+            knifeItem(ToolMaterial.IRON)
+    );
+    public static final Item DIAMOND_KNIFE = registerItem(ModItemIds.DIAMOND_KNIFE, KnifeItem::new,
+            knifeItem(ToolMaterial.DIAMOND)
+    );
 
-    public static final Item WHEAT_GRAIN = registerItem(
-            "wheat_grain",
-            Item::new,
+    public static final Item WHEAT_GRAIN = registerItem("wheat_grain",
             new Item.Properties().food(new FoodProperties(1, 1, false))
     );
+    public static final Item WHEAT_FLOUR = registerItem("wheat_flour");
+    public static final Item WHEAT_FLATBREAD_DOUGH = registerItem("wheat_flatbread_dough");
+    public static final Item WHEAT_FLATBREAD = registerItem("wheat_flatbread",
+            new Item.Properties().food(new FoodProperties(3, 0.3f, false))
+    );
+
+    public static final Item QUERN = registerItem("quern", p -> new BlockItem(ClimaticBlocks.QUERN, p));
+    public static final Item HANDSTONE = registerItem("handstone", new Item.Properties().durability(250).stacksTo(1));
 
     public static void init() {
 
+    }
+
+    private static Item registerItem(String id) {
+        return registerItem(id, Item::new, new Item.Properties());
     }
 
     public static Item registerItem(String id, Function<Item.Properties, Item> itemFactory) {
         return registerItem(id, itemFactory, new Item.Properties());
     }
 
-    private static Item registerItem(String id, Function<Item.Properties, Item> itemFactory, Item.Properties properties) {
+    private static Item registerItem(String id, Item.Properties properties) {
+        return registerItem(id, Item::new, properties);
+    }
+
+    private static Item registerItem(String id, Function<Item.Properties, Item> itemFactory,
+                                     Item.Properties properties) {
         ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, ClimaticPlants.identifier(id));
         return registerItem(key, itemFactory, properties);
     }
 
-    private static Item registerItem(ResourceKey<Item> key, Function<Item.Properties, Item> itemFactory, Item.Properties properties) {
+    private static Item registerItem(ResourceKey<Item> key, Function<Item.Properties, Item> itemFactory,
+                                     Item.Properties properties) {
         Item item = itemFactory.apply(properties.setId(key));
         if (item instanceof BlockItem blockItem) {
             Item.BY_BLOCK.put(blockItem.getBlock(), item);
@@ -63,17 +86,19 @@ public class ClimaticItems {
     }
 
     public static Item.Properties knifeItem(ToolMaterial material) {
-        HolderGetter<Block> holderGetter = BuiltInRegistries.acquireBootstrapRegistrationLookup(BuiltInRegistries.BLOCK);
-        return new Item.Properties()
-                .durability(material.durability())
-                .repairable(material.repairItems())
-                .enchantable(material.enchantmentValue())
-                .attributes(KnifeItem.createAttributes(material, 0.5F, -2.0F))
-                .component(DataComponents.TOOL, new Tool(
-                        List.of(
-                                Tool.Rule.deniesDrops(holderGetter.getOrThrow(material.incorrectBlocksForDrops())),
-                                Tool.Rule.minesAndDrops(holderGetter.getOrThrow(ClimaticTags.MINEABLE_WITH_KNIFE), material.speed())
-                        ), 1.0F, 1, false))
-                .component(DataComponents.WEAPON, new Weapon(2));
+        HolderGetter<Block> holderGetter = BuiltInRegistries.acquireBootstrapRegistrationLookup(
+                BuiltInRegistries.BLOCK);
+        return new Item.Properties().durability(material.durability()).repairable(material.repairItems())
+                                    .enchantable(material.enchantmentValue())
+                                    .attributes(KnifeItem.createAttributes(material, 0.5F, -2.0F))
+                                    .component(DataComponents.TOOL, new Tool(List.of(Tool.Rule.deniesDrops(
+                                                            holderGetter.getOrThrow(material.incorrectBlocksForDrops())),
+                                                    Tool.Rule.minesAndDrops(
+                                                            holderGetter.getOrThrow(ClimaticTags.MINEABLE_WITH_KNIFE),
+                                                            material.speed()
+                                                    )
+                                            ), 1.0F, 1, false
+                                            )
+                                    ).component(DataComponents.WEAPON, new Weapon(2));
     }
 }
