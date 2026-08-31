@@ -1,5 +1,6 @@
 package dev.gotitim.climatic_plants.datagen;
 
+import dev.gotitim.climatic_plants.content.ClimaticBlocks;
 import dev.gotitim.climatic_plants.content.ClimaticTags;
 import dev.gotitim.climatic_plants.content.ModItemIds;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -7,6 +8,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.references.BlockItemIds;
 import net.minecraft.references.ItemIds;
+import net.minecraft.tags.BlockTags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -29,6 +31,9 @@ public class ModTagsProvider {
                     .add(BlockItemIds.JACK_O_LANTERN)
                     .add(BlockItemIds.COBWEB)
                     .add(BlockItemIds.CAKE);
+
+            builder(BlockTags.MINEABLE_WITH_AXE)
+                    .add(ClimaticBlocks.Ids.FLUID_BARREL);
         }
     }
 

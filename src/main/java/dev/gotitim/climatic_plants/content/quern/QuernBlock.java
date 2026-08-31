@@ -2,7 +2,7 @@ package dev.gotitim.climatic_plants.content.quern;
 
 import com.mojang.math.Constants;
 import com.mojang.serialization.MapCodec;
-import dev.gotitim.climatic_plants.content.ClimaticBlocks;
+import dev.gotitim.climatic_plants.ClimaticBlockEntities;
 import dev.gotitim.climatic_plants.content.ClimaticItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -56,7 +56,7 @@ public class QuernBlock extends BaseEntityBlock {
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NonNull BlockState blockState,
                                                                             @NonNull BlockEntityType<T> type) {
-        return createTickerHelper(type, ClimaticBlocks.QUERN_BLOCK_ENTITY, QuernBlockEntity::tick);
+        return createTickerHelper(type, ClimaticBlockEntities.QUERN, QuernBlockEntity::tick);
     }
 
     public QuernBlock(Properties properties) {
@@ -134,10 +134,16 @@ public class QuernBlock extends BaseEntityBlock {
         final Vec3 hit = result.getLocation();
 
         if (quern.hasHandstone()) {
-            if (!quern.isGrinding() && HANDLE_AABB.move(pos).contains(hit)) return SelectionPlace.HANDLE;
-            if (!quern.isGrinding() && !held.isEmpty() ||
-                    !quern.getItem(SLOT_INPUT).isEmpty() && INPUT_SLOT_AABB.move(pos).contains(hit))
+            if (!quern.isGrinding()) {
+                if (HANDLE_AABB.move(pos).contains(hit)) {
+                    return SelectionPlace.HANDLE;
+                } else if (!held.isEmpty()) {
+                    return SelectionPlace.INPUT_SLOT;
+                }
+            }
+            if (!quern.getItem(SLOT_INPUT).isEmpty() && INPUT_SLOT_AABB.move(pos).contains(hit)) {
                 return SelectionPlace.INPUT_SLOT;
+            }
         }
         if ((quern.hasHandstone() || quern.isItemValid(SLOT_HANDSTONE, held)) && HANDSTONE_AABB.move(pos).contains(hit))
             return SelectionPlace.HANDSTONE;
@@ -185,21 +191,10 @@ public class QuernBlock extends BaseEntityBlock {
         return new QuernBlockEntity(pos, state);
     }
 
-    /**
-     * Just a helper enum to figure out where player is looking at
-     * Used to draw selection boxes + handle interaction
-     */
     private enum SelectionPlace {
-        HANDLE(HANDLE_SHAPE),
-        HANDSTONE(HANDSTONE_SHAPE),
-        INPUT_SLOT(INPUT_SLOT_SHAPE),
-        BASE(BASE_SHAPE);
-
-        final VoxelShape shape;
-
-        SelectionPlace(VoxelShape shape)
-        {
-            this.shape = shape;
-        }
+        HANDLE,
+        HANDSTONE,
+        INPUT_SLOT,
+        BASE
     }
 }

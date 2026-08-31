@@ -18,6 +18,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import java.util.concurrent.CompletableFuture;
 
 import static dev.gotitim.climatic_plants.ClimaticPlants.identifier;
+import static dev.gotitim.climatic_plants.content.ClimaticBlocks.QUERN;
 import static dev.gotitim.climatic_plants.content.ClimaticItems.*;
 import static net.minecraft.data.recipes.RecipeCategory.*;
 

@@ -1,5 +1,6 @@
 package dev.gotitim.climatic_plants.content.quern;
 
+import dev.gotitim.climatic_plants.ClimaticBlockEntities;
 import dev.gotitim.climatic_plants.content.ClimaticBlocks;
 import dev.gotitim.climatic_plants.content.ClimaticItems;
 import dev.gotitim.climatic_plants.content.ClimaticSounds;
@@ -51,7 +52,7 @@ public class QuernBlockEntity extends BlockEntity implements Container {
     private QuernRecipe activeRecipe;
 
     public QuernBlockEntity(BlockPos pos, BlockState state) {
-        super(ClimaticBlocks.QUERN_BLOCK_ENTITY, pos, state);
+        super(ClimaticBlockEntities.QUERN, pos, state);
 
         this.recipeTimer = 0;
     }
@@ -129,7 +130,7 @@ public class QuernBlockEntity extends BlockEntity implements Container {
     }
 
     public boolean isItemValid(int slot, ItemStack stack) {
-        return slot != SLOT_HANDSTONE || stack.is(ClimaticItems.QUERN);
+        return slot != SLOT_HANDSTONE || stack.is(ClimaticBlocks.QUERN.asItem());
     }
 
     public boolean isGrinding() {

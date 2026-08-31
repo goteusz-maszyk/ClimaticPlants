@@ -50,7 +50,6 @@ public class ClimaticItems {
             new Item.Properties().food(new FoodProperties(3, 0.3f, false))
     );
 
-    public static final Item QUERN = registerItem("quern", p -> new BlockItem(ClimaticBlocks.QUERN, p));
     public static final Item HANDSTONE = registerItem("handstone", new Item.Properties().durability(250).stacksTo(1));
 
     public static void init() {
@@ -61,7 +60,7 @@ public class ClimaticItems {
         return registerItem(id, Item::new, new Item.Properties());
     }
 
-    public static Item registerItem(String id, Function<Item.Properties, Item> itemFactory) {
+    public static <T extends Item> T registerItem(String id, Function<Item.Properties, T> itemFactory) {
         return registerItem(id, itemFactory, new Item.Properties());
     }
 
@@ -69,15 +68,15 @@ public class ClimaticItems {
         return registerItem(id, Item::new, properties);
     }
 
-    private static Item registerItem(String id, Function<Item.Properties, Item> itemFactory,
+    private static <T extends Item> T registerItem(String id, Function<Item.Properties, T> itemFactory,
                                      Item.Properties properties) {
         ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, ClimaticPlants.identifier(id));
         return registerItem(key, itemFactory, properties);
     }
 
-    private static Item registerItem(ResourceKey<Item> key, Function<Item.Properties, Item> itemFactory,
-                                     Item.Properties properties) {
-        Item item = itemFactory.apply(properties.setId(key));
+    private static <T extends Item> T registerItem(ResourceKey<Item> key, Function<Item.Properties, T> itemFactory,
+                                      Item.Properties properties) {
+        T item = itemFactory.apply(properties.setId(key));
         if (item instanceof BlockItem blockItem) {
             Item.BY_BLOCK.put(blockItem.getBlock(), item);
         }
