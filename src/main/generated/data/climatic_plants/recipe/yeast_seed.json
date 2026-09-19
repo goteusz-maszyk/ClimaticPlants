@@ -1,0 +1,20 @@
+{
+  "type": "climatic_plants:barrel",
+  "duration": 24000,
+  "input_fluid": {
+    "amount": 20250,
+    "fluid": {
+      "fluid": "minecraft:water"
+    }
+  },
+  "input_item": {
+    "count": 4,
+    "ingredient": "#climatic_plants:yeast_starter_ingredients"
+  },
+  "output_fluid": {
+    "amount": 20250,
+    "fluid": {
+      "fluid": "climatic_plants:yeast"
+    }
+  }
+}

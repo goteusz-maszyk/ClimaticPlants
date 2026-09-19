@@ -10,9 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ToolMaterial;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.component.Weapon;
 import net.minecraft.world.level.block.Block;
@@ -44,19 +42,24 @@ public class ClimaticItems {
     public static final Item WHEAT_GRAIN = registerItem("wheat_grain",
             new Item.Properties().food(new FoodProperties(1, 1, false))
     );
-    public static final Item WHEAT_FLOUR = registerItem("wheat_flour");
-    public static final Item WHEAT_FLATBREAD_DOUGH = registerItem("wheat_flatbread_dough");
+    public static final Item WHEAT_FLOUR = registerItem(ModItemIds.WHEAT_FLOUR);
+
+    public static final Item WHEAT_DOUGH = registerItem(ModItemIds.WHEAT_DOUGH);
+    public static final Item WHEAT_FLATBREAD_DOUGH = registerItem(ModItemIds.WHEAT_FLATBREAD_DOUGH);
     public static final Item WHEAT_FLATBREAD = registerItem("wheat_flatbread",
             new Item.Properties().food(new FoodProperties(3, 0.3f, false))
     );
 
     public static final Item HANDSTONE = registerItem("handstone", new Item.Properties().durability(250).stacksTo(1));
 
+    public static final Item YEAST_BUCKET = registerItem(
+            "yeast_bucket", p -> new BucketItem(ClimaticFluids.YEAST, p), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)
+    );
     public static void init() {
 
     }
 
-    private static Item registerItem(String id) {
+    private static Item registerItem(ResourceKey<Item> id) {
         return registerItem(id, Item::new, new Item.Properties());
     }
 

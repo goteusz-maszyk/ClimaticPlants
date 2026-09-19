@@ -10,6 +10,9 @@ public class ModItemIds {
     public static final ResourceKey<Item> COPPER_KNIFE = createKey("copper_knife");
     public static final ResourceKey<Item> IRON_KNIFE = createKey("iron_knife");
     public static final ResourceKey<Item> DIAMOND_KNIFE = createKey("diamond_knife");
+    public static final ResourceKey<Item> WHEAT_FLOUR = createKey("wheat_flour");
+    public static final ResourceKey<Item> WHEAT_FLATBREAD_DOUGH = createKey("wheat_flatbread_dough");
+    public static final ResourceKey<Item> WHEAT_DOUGH = createKey("wheat_dough");
 
     private static ResourceKey<Item> createKey(String name) {
         return ResourceKey.create(Registries.ITEM, ClimaticPlants.identifier(name));

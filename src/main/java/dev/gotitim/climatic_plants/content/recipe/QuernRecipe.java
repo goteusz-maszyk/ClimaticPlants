@@ -1,4 +1,4 @@
-package dev.gotitim.climatic_plants.content.quern;
+package dev.gotitim.climatic_plants.content.recipe;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -100,12 +100,12 @@ public class QuernRecipe implements Recipe<SingleRecipeInput> {
     }
 
     @Override
-    public RecipeSerializer<? extends net.minecraft.world.item.crafting.Recipe<SingleRecipeInput>> getSerializer() {
+    public RecipeSerializer<? extends Recipe<SingleRecipeInput>> getSerializer() {
         return SERIALIZER;
     }
 
     @Override
-    public RecipeType<? extends net.minecraft.world.item.crafting.Recipe<SingleRecipeInput>> getType() {
+    public RecipeType<? extends Recipe<SingleRecipeInput>> getType() {
         return TYPE;
     }
 

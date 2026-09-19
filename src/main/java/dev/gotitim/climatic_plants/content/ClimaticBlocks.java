@@ -15,8 +15,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
@@ -71,6 +73,7 @@ public class ClimaticBlocks {
         public static final BlockItemId QUERN = create("quern");
         public static final BlockItemId FLUID_BARREL = create("fluid_barrel");
         public static final BlockItemId BARREL_RACK = create("barrel_rack");
+        public static final BlockItemId YEAST = create("yeast");
 
         private static BlockItemId create(String name) {
             Identifier id = ClimaticPlants.identifier(name);

@@ -106,6 +106,7 @@ public class ModModelProvider extends FabricModelProvider {
         generator.generateFlatItem(ClimaticItems.IRON_KNIFE, ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(ClimaticItems.COPPER_KNIFE, ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(ClimaticItems.DIAMOND_KNIFE, ModelTemplates.FLAT_HANDHELD_ITEM);
+        generator.generateFlatItem(ClimaticItems.YEAST_BUCKET, ModelTemplates.FLAT_HANDHELD_ITEM);
 
         generator.itemModelOutput.accept(ClimaticBlocks.QUERN.asItem(),
                 ItemModelUtils.plainModel(ClimaticPlants.identifier("block/quern"))

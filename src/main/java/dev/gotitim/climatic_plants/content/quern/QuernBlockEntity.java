@@ -4,6 +4,7 @@ import dev.gotitim.climatic_plants.ClimaticBlockEntities;
 import dev.gotitim.climatic_plants.content.ClimaticBlocks;
 import dev.gotitim.climatic_plants.content.ClimaticItems;
 import dev.gotitim.climatic_plants.content.ClimaticSounds;
+import dev.gotitim.climatic_plants.content.recipe.QuernRecipe;
 import dev.gotitim.climatic_plants.util.MathUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -200,7 +201,7 @@ public class QuernBlockEntity extends BlockEntity implements Container {
 
     @Override
     public int getContainerSize() {
-        return 0;
+        return 3;
     }
 
     @Override

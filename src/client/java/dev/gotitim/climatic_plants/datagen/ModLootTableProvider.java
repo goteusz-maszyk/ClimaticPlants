@@ -60,5 +60,6 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
         }
 
         add(ClimaticBlocks.QUERN, createSingleItemTable(ClimaticBlocks.QUERN));
+        add(ClimaticBlocks.FLUID_BARREL, createSingleItemTable(ClimaticBlocks.FLUID_BARREL));
     }
 }

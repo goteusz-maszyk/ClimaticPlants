@@ -62,6 +62,14 @@ public class ModTagsProvider {
                     .add(BlockItemIds.POLISHED_TUFF)
                     .add(BlockItemIds.POLISHED_CINNABAR)
                     .add(BlockItemIds.POLISHED_DEEPSLATE);
+
+            builder(ClimaticTags.YEAST_STARTER_INGREDIENTS)
+                    .add(BlockItemIds.POTATO_CROP)
+                    .add(ModItemIds.WHEAT_FLOUR)
+                    .add(BlockItemIds.SWEET_BERRY_CROP)
+                    .add(ItemIds.APPLE)
+                    .add(ItemIds.SUGAR)
+                    .add(ItemIds.BEETROOT);
         }
     }
 }

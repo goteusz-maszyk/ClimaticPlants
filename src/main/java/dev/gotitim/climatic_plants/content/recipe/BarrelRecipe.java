@@ -3,19 +3,24 @@ package dev.gotitim.climatic_plants.content.recipe;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.gotitim.climatic_plants.ClimaticPlants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.InventoryChangeTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeUnlockAdvancementBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.Item;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
@@ -25,63 +30,126 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
-public class QuernRecipe implements Recipe<SingleRecipeInput> {
-    public static final MapCodec<QuernRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(i -> i
-            .group(Ingredient.CODEC.fieldOf("ingredient").forGetter(o -> o.ingredient),
-                    ItemStackTemplate.CODEC.fieldOf("result").forGetter(o -> o.result)
-            ).apply(i, QuernRecipe::new));
+public class BarrelRecipe implements Recipe<BarrelRecipe.BarrelRecipeInput> {
+    public static final MapCodec<BarrelRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(i -> i
+            .group(
+                    SizedIngredient.MAP_CODEC.codec().optionalFieldOf("input_item").forGetter(c -> Optional.ofNullable(
+                            c.inputItem)),
+                    FluidStack.MAP_CODEC.codec().fieldOf("input_fluid").forGetter(c -> c.inputFluid),
+                    ItemStackTemplate.CODEC.optionalFieldOf("output_item").forGetter(c -> Optional.ofNullable(c.outputItem)),
+                    FluidStack.MAP_CODEC.codec().optionalFieldOf("output_fluid", FluidStack.EMPTY).forGetter(c -> c.outputFluid),
+                    SoundEvent.CODEC.optionalFieldOf("sound", Holder.direct(SoundEvents.BREWING_STAND_BREW)).forGetter(c -> c.sound),
+                    ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("duration", 0).forGetter(c -> c.duration)
+            ).apply(i, BarrelRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, QuernRecipe> STREAM_CODEC = StreamCodec.composite(
-            Ingredient.CONTENTS_STREAM_CODEC, r -> r.ingredient, ItemStackTemplate.STREAM_CODEC, c -> c.result,
-            QuernRecipe::new
+    public static final StreamCodec<RegistryFriendlyByteBuf, BarrelRecipe> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.optional(SizedIngredient.STREAM_CODEC), r -> Optional.ofNullable(r.inputItem),
+            FluidStack.STREAM_CODEC, r -> r.inputFluid,
+            ByteBufCodecs.optional(ItemStackTemplate.STREAM_CODEC), r -> Optional.ofNullable(r.outputItem),
+            FluidStack.STREAM_CODEC, r -> r.outputFluid,
+            SoundEvent.STREAM_CODEC, r -> r.sound,
+            ByteBufCodecs.VAR_INT, r -> r.duration,
+            BarrelRecipe::new
     );
 
-    public static final RecipeType<QuernRecipe> TYPE = Registry.register(BuiltInRegistries.RECIPE_TYPE,
-            ClimaticPlants.identifier("quern"), new Type()
+    public static final RecipeType<BarrelRecipe> TYPE = Registry.register(BuiltInRegistries.RECIPE_TYPE,
+            ClimaticPlants.identifier("barrel"), new Type()
     );
 
-    public static final RecipeSerializer<QuernRecipe> SERIALIZER = Registry.register(
-            BuiltInRegistries.RECIPE_SERIALIZER, ClimaticPlants.identifier("quern"),
+    public static final RecipeSerializer<BarrelRecipe> SERIALIZER = Registry.register(
+            BuiltInRegistries.RECIPE_SERIALIZER, ClimaticPlants.identifier("barrel"),
             new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC)
     );
 
-    public static final RecipeBookCategory QUERN_CATEGORY = new RecipeBookCategory();
+    public static final RecipeBookCategory BARREL_CATEGORY = new RecipeBookCategory();
 
-    private final Ingredient ingredient;
-    private final ItemStackTemplate result;
+    public final SizedIngredient inputItem;
+    public final FluidStack inputFluid;
+    public final ItemStackTemplate outputItem;
+    public final FluidStack outputFluid;
+    public final Holder<SoundEvent> sound;
+    public final int duration;
 
-    public QuernRecipe(Ingredient ingredient, ItemStackTemplate result) {
-        this.ingredient = ingredient;
-        this.result = result;
+    protected BarrelRecipe(Optional<SizedIngredient> inputItem, FluidStack inputFluid, Optional<ItemStackTemplate> outputItem, FluidStack outputFluid, Holder<SoundEvent> sound, int duration) {
+        this.inputItem = inputItem.orElse(null);
+        this.inputFluid = inputFluid;
+        this.outputItem = outputItem.orElse(null);
+        this.outputFluid = outputFluid;
+        this.sound = sound;
+        this.duration = duration;
+    }
+    protected BarrelRecipe(SizedIngredient inputItem, FluidStack inputFluid, ItemStackTemplate outputItem, FluidStack outputFluid, Holder<SoundEvent> sound, int duration) {
+        this.inputItem = inputItem;
+        this.inputFluid = inputFluid;
+        this.outputItem = outputItem;
+        this.outputFluid = outputFluid;
+        this.sound = sound;
+        this.duration = duration;
     }
 
-    public static void init() {
+    public boolean isInstant() {
+        return duration <= 0;
     }
 
-    public static Optional<RecipeHolder<QuernRecipe>> get(@Nullable ServerLevel level, ItemStack inputStack) {
+    public static Optional<RecipeHolder<BarrelRecipe>> get(@Nullable ServerLevel level, ItemStack inputStack, SingleFluidStorage fluidStorage) {
         return level.getServer().getRecipeManager()
-                    .getRecipeFor(QuernRecipe.TYPE, new SingleRecipeInput(inputStack), level);
+                    .getRecipeFor(BarrelRecipe.TYPE, new BarrelRecipeInput(inputStack, fluidStorage), level);
     }
 
-    public static void save(Ingredient ingredient, Item result,
+    public static void saveInstant(SizedIngredient ingredient, FluidStack inputFluid, ItemStackTemplate outputItem, FluidStack outputFluid, Holder<SoundEvent> sound,
+                                   Criterion<InventoryChangeTrigger.TriggerInstance> unlockedBy,
+                                   RecipeOutput output) {
+        save(ingredient, inputFluid, outputItem, outputFluid, 0, unlockedBy, output);
+    }
+
+    public static void save(SizedIngredient ingredient, FluidStack inputFluid, ItemStackTemplate outputItem, FluidStack outputFluid, int duration,
                             Criterion<InventoryChangeTrigger.TriggerInstance> unlockedBy,
                             RecipeOutput output) {
-        QuernRecipe recipe = new QuernRecipe(ingredient, new ItemStackTemplate(result));
-        ResourceKey<Recipe<?>> key = RecipeBuilder.getDefaultRecipeId(recipe.result);
+        save(ingredient, inputFluid, outputItem, outputFluid, duration, Holder.direct(SoundEvents.BREWING_STAND_BREW), unlockedBy, output);
+    }
+
+    public static void save(SizedIngredient ingredient, FluidStack inputFluid, ItemStackTemplate outputItem, FluidStack outputFluid, int duration, Holder<SoundEvent> sound,
+                            Criterion<InventoryChangeTrigger.TriggerInstance> unlockedBy,
+                            RecipeOutput output) {
+        BarrelRecipe recipe = new BarrelRecipe(ingredient, inputFluid, outputItem, outputFluid, sound, duration);
+        ResourceKey<Recipe<?>> key = ResourceKey.create(
+                Registries.RECIPE, recipe.getOutputKey().identifier());
 
         var advancementBuilder = new RecipeUnlockAdvancementBuilder();
         advancementBuilder.unlockedBy("has_item", unlockedBy);
         output.accept(key, recipe, advancementBuilder.build(output, key, RecipeCategory.FOOD));
     }
 
-    @Override
-    public boolean matches(SingleRecipeInput input, @NonNull Level level) {
-        return ingredient.test(input.item());
+    public static void save(String name, SizedIngredient ingredient, FluidStack inputFluid, ItemStackTemplate outputItem, FluidStack outputFluid, int duration,
+                            Criterion<InventoryChangeTrigger.TriggerInstance> unlockedBy,
+                            RecipeOutput output) {
+        save(name, ingredient, inputFluid, outputItem, outputFluid, duration, Holder.direct(SoundEvents.BREWING_STAND_BREW), unlockedBy, output);
+    }
+
+    public static void save(String name, SizedIngredient ingredient, FluidStack inputFluid, ItemStackTemplate outputItem, FluidStack outputFluid, int duration, Holder<SoundEvent> sound,
+                            Criterion<InventoryChangeTrigger.TriggerInstance> unlockedBy,
+                            RecipeOutput output) {
+        BarrelRecipe recipe = new BarrelRecipe(ingredient, inputFluid, outputItem, outputFluid, sound, duration);
+        ResourceKey<Recipe<?>> key = ResourceKey.create(
+                Registries.RECIPE, ClimaticPlants.identifier(name));
+
+        var advancementBuilder = new RecipeUnlockAdvancementBuilder();
+        advancementBuilder.unlockedBy("has_item", unlockedBy);
+        output.accept(key, recipe, advancementBuilder.build(output, key, RecipeCategory.FOOD));
+    }
+
+    private ResourceKey<?> getOutputKey() {
+        return (outputItem == null ? outputFluid.fluidVariant() : outputItem).typeHolder().unwrapKey().get();
     }
 
     @Override
-    public @NonNull ItemStack assemble(@NonNull SingleRecipeInput input) {
-        return result.create();
+    public boolean matches(BarrelRecipeInput input, Level level) {
+        return (inputItem == null || inputItem.test(input.itemStack)) && inputFluid.test(input.fluidStack);
+    }
+
+    @Override
+    public @NonNull ItemStack assemble(BarrelRecipeInput input) {
+        return outputItem == null ? ItemStack.EMPTY : outputItem.create();
     }
 
     @Override
@@ -91,7 +159,7 @@ public class QuernRecipe implements Recipe<SingleRecipeInput> {
 
     @Override
     public boolean showNotification() {
-        return false;
+        return true;
     }
 
     @Override
@@ -100,29 +168,45 @@ public class QuernRecipe implements Recipe<SingleRecipeInput> {
     }
 
     @Override
-    public RecipeSerializer<? extends net.minecraft.world.item.crafting.Recipe<SingleRecipeInput>> getSerializer() {
+    public @NonNull RecipeSerializer<? extends Recipe<BarrelRecipeInput>> getSerializer() {
         return SERIALIZER;
     }
 
     @Override
-    public RecipeType<? extends net.minecraft.world.item.crafting.Recipe<SingleRecipeInput>> getType() {
+    public @NonNull RecipeType<? extends Recipe<BarrelRecipeInput>> getType() {
         return TYPE;
     }
 
     @Override
     public PlacementInfo placementInfo() {
-        return PlacementInfo.create(ingredient);
+        return inputItem == null ? PlacementInfo.NOT_PLACEABLE : PlacementInfo.create(inputItem.ingredient());
     }
 
     @Override
     public RecipeBookCategory recipeBookCategory() {
-        return QUERN_CATEGORY;
+        return BARREL_CATEGORY;
     }
 
-    private static class Type implements RecipeType<QuernRecipe> {
+    public static void init() {
+    }
+
+    private static class Type implements RecipeType<BarrelRecipe> {
         @Override
         public String toString() {
-            return "quern";
+            return "barrel";
+        }
+    }
+
+    public record BarrelRecipeInput(ItemStack itemStack, SingleFluidStorage fluidStack) implements RecipeInput {
+
+        @Override
+        public ItemStack getItem(int index) {
+            return itemStack;
+        }
+
+        @Override
+        public int size() {
+            return 2;
         }
     }
 }

@@ -67,12 +67,13 @@ public class FluidBarrelBlock extends BaseEntityBlock {
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState,
                                                                             BlockEntityType<T> type) {
-        return createTickerHelper(type, ClimaticBlockEntities.FLUID_BARREL, FluidBarrelBlockEntity::tick);
+        return createTickerHelper(type, ClimaticBlockEntities.FLUID_BARREL, FluidBarrelBlockEntity::tickOuter);
     }
 
     @Override
     protected InteractionResult useItemOn(ItemStack heldStack, BlockState state, Level level, BlockPos pos,
                                           Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
         final Optional<FluidBarrelBlockEntity> barrelOpt = level.getBlockEntity(pos,
                 ClimaticBlockEntities.FLUID_BARREL
         );
@@ -85,10 +86,12 @@ public class FluidBarrelBlock extends BaseEntityBlock {
                 player.setItemInHand(hand, new ItemStack(ClimaticBlocks.BARREL_RACK));
                 level.setBlockAndUpdate(pos, state.setValue(RACK, false));
             } else {
-                level.setBlockAndUpdate(pos, state.cycle(SEALED));
+                final boolean nextSealed = !state.getValue(SEALED);
+                level.setBlockAndUpdate(pos, state.setValue(SEALED, nextSealed));
+                barrel.setChanged();
             }
             level.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0f, 0.85f);
-            return InteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS_SERVER;
         }
 
         if (heldStack.is(ClimaticBlocks.BARREL_RACK.asItem()) && state.getValue(
@@ -103,12 +106,16 @@ public class FluidBarrelBlock extends BaseEntityBlock {
             level.playSound(player, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F,
                     sound.getPitch() * 0.8F
             );
-        } else if (ItemUtils.transferFluid(heldStack, barrel, player, hand)) {
-            return InteractionResult.SUCCESS;
-        } else {
+            return InteractionResult.SUCCESS_SERVER;
+        }
+
+        if (!state.getValue(SEALED)) {
+            if (ItemUtils.transferFluid(heldStack, barrel, player, hand)) {
+                return InteractionResult.SUCCESS_SERVER;
+            }
             barrel.insertOrExtract(player, hand);
         }
-        return InteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS_SERVER;
     }
 
     @Override
@@ -184,7 +191,7 @@ public class FluidBarrelBlock extends BaseEntityBlock {
     protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos, Direction direction) {
         if (level.getBlockEntity(pos) instanceof FluidBarrelBlockEntity barrel) {
             final SingleFluidStorage tank = barrel.getFluidStorage(direction);
-            if (tank.isResourceBlank()) {
+            if (!tank.isResourceBlank()) {
                 return (int) Mth.clamp(tank.getAmount() * 15 / FluidBarrelBlockEntity.CAPACITY, 1, 15);
             }
         }
@@ -196,12 +203,13 @@ public class FluidBarrelBlock extends BaseEntityBlock {
                                    @Nullable Orientation orientation, boolean movedByPiston) {
         final boolean signal = level.hasNeighborSignal(pos);
         if (signal != state.getValue(POWERED)) {
-            if (signal != state.getValue(SEALED)) {
+            if (signal == state.getValue(SEALED)) {
+                level.setBlockAndUpdate(pos, state.setValue(POWERED, signal));
+            } else {
                 level.setBlockAndUpdate(pos, state.setValue(POWERED, signal).setValue(SEALED, signal));
 
-                level.getBlockEntity(pos, ClimaticBlockEntities.FLUID_BARREL).get().updateRecipe();
-            } else {
-                level.setBlockAndUpdate(pos, state.setValue(POWERED, signal));
+                level.getBlockEntity(pos, ClimaticBlockEntities.FLUID_BARREL).ifPresent(
+                        FluidBarrelBlockEntity::setChanged);
             }
         }
     }
