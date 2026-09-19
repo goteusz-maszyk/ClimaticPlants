@@ -5,7 +5,7 @@
     "side": "climatic_plants:block/devices/quern/handstone_side",
     "particle": "climatic_plants:block/devices/quern/handstone_top",
     "handstone": "climatic_plants:block/devices/quern/handstone_top",
-    "handle": "climatic_plants:block/wood/sheet/oak"
+    "handle": "minecraft:block/oak_planks"
   },
   "elements": [
     {

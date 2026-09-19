@@ -1,32 +1,32 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_item": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "climatic_plants:wheat_dough"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_wheat_flour": {
       "conditions": {
         "items": [
           {
-            "items": "#climatic_plants:yeast_starter_ingredients"
+            "items": "climatic_plants:wheat_flour"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
-    },
-    "has_the_recipe": {
-      "conditions": {
-        "recipe": "climatic_plants:yeast_multiply"
-      },
-      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
       "has_the_recipe",
-      "has_item"
+      "has_wheat_flour"
     ]
   ],
   "rewards": {
     "recipes": [
-      "climatic_plants:yeast_multiply"
+      "climatic_plants:wheat_dough"
     ]
   }
 }

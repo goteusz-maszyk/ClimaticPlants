@@ -18,6 +18,7 @@ import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import org.jspecify.annotations.NonNull;
 
 import static net.minecraft.client.data.models.BlockModelGenerators.*;
@@ -101,6 +102,9 @@ public class ModModelProvider extends FabricModelProvider {
         generator.generateFlatItem(ClimaticItems.WHEAT_FLOUR, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(ClimaticItems.WHEAT_FLATBREAD_DOUGH, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(ClimaticItems.WHEAT_FLATBREAD, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(ClimaticItems.WHEAT_DOUGH, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(ClimaticItems.YEAST_CULTURE, ModelTemplates.FLAT_ITEM);
 
         generator.generateFlatItem(ClimaticItems.FLINT_KNIFE, ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(ClimaticItems.IRON_KNIFE, ModelTemplates.FLAT_HANDHELD_ITEM);
@@ -115,7 +119,11 @@ public class ModModelProvider extends FabricModelProvider {
                 ItemModelUtils.plainModel(ClimaticPlants.identifier("item/handstone"))
         );
         generator.itemModelOutput.accept(ClimaticBlocks.FLUID_BARREL.asItem(),
-                ItemModelUtils.plainModel(ClimaticPlants.identifier("block/fluid_barrel"))
+                ItemModelUtils.conditional(
+                        ItemModelUtils.hasComponent(DataComponents.BLOCK_ENTITY_DATA),
+                        ItemModelUtils.plainModel(ClimaticPlants.identifier("block/barrel_sealed")),
+                        ItemModelUtils.plainModel(ClimaticPlants.identifier("block/fluid_barrel"))
+                )
         );
         generator.itemModelOutput.accept(ClimaticBlocks.BARREL_RACK.asItem(),
                 ItemModelUtils.plainModel(ClimaticPlants.identifier("block/barrel_rack"))

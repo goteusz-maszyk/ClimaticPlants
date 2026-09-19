@@ -1,6 +1,7 @@
 package dev.gotitim.climatic_plants.datagen;
 
 import dev.gotitim.climatic_plants.content.ClimaticBlocks;
+import dev.gotitim.climatic_plants.content.barrel.FluidBarrelBlock;
 import dev.gotitim.climatic_plants.content.crop.Crop;
 import dev.gotitim.climatic_plants.content.crop.DeadCropBlock;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -60,6 +61,14 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
         }
 
         add(ClimaticBlocks.QUERN, createSingleItemTable(ClimaticBlocks.QUERN));
-        add(ClimaticBlocks.FLUID_BARREL, createSingleItemTable(ClimaticBlocks.FLUID_BARREL));
+        add(ClimaticBlocks.FLUID_BARREL, LootTable.lootTable()
+                .withPool(new LootPool.Builder()
+                        .add(LootItem.lootTableItem(ClimaticBlocks.FLUID_BARREL)))
+                .withPool(new LootPool.Builder()
+                        .when(hasBlockStateProperties(ClimaticBlocks.FLUID_BARREL)
+                                .setProperties(StatePropertiesPredicate.Builder.properties()
+                                        .hasProperty(FluidBarrelBlock.RACK, true)))
+                        .add(LootItem.lootTableItem(ClimaticBlocks.BARREL_RACK))));
+        add(ClimaticBlocks.BARREL_RACK, createSingleItemTable(ClimaticBlocks.BARREL_RACK));
     }
 }

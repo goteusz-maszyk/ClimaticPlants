@@ -18,11 +18,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.material.Fluids;
+import org.jspecify.annotations.NonNull;
 
 import java.util.concurrent.CompletableFuture;
 
 import static dev.gotitim.climatic_plants.ClimaticPlants.identifier;
-import static dev.gotitim.climatic_plants.content.ClimaticBlocks.QUERN;
+import static dev.gotitim.climatic_plants.content.ClimaticBlocks.*;
 import static dev.gotitim.climatic_plants.content.ClimaticItems.*;
 import static dev.gotitim.climatic_plants.content.ClimaticTags.*;
 import static net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants.fromBucketFraction;
@@ -34,11 +35,13 @@ public class ModRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
+    @NonNull
     protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
         return new IntlRecipeProvider(registries, output);
     }
 
     @Override
+    @NonNull
     public String getName() {
         return "Recipes";
     }
@@ -55,6 +58,34 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                     .requires(Items.WHEAT).requires(KNIVES)
                     .unlockedBy(getHasName(Items.WHEAT), has(Items.WHEAT)).save(output);
 
+            shaped(TOOLS, FLINT_KNIFE)
+                    .pattern("F").pattern("S").pattern("S")
+                    .define('F', Items.FLINT)
+                    .define('S', ConventionalItemTags.WOODEN_RODS)
+                    .unlockedBy("has_flint", has(Items.FLINT))
+                    .save(output);
+
+            shaped(TOOLS, COPPER_KNIFE)
+                    .pattern("C").pattern("S").pattern("S")
+                    .define('C', ConventionalItemTags.COPPER_INGOTS)
+                    .define('S', ConventionalItemTags.WOODEN_RODS)
+                    .unlockedBy("has_copper", has(ConventionalItemTags.COPPER_INGOTS))
+                    .save(output);
+
+            shaped(TOOLS, IRON_KNIFE)
+                    .pattern("I").pattern("S").pattern("S")
+                    .define('I', ConventionalItemTags.IRON_INGOTS)
+                    .define('S', ConventionalItemTags.WOODEN_RODS)
+                    .unlockedBy("has_iron", has(ConventionalItemTags.IRON_INGOTS))
+                    .save(output);
+
+            shaped(TOOLS, DIAMOND_KNIFE)
+                    .pattern("D").pattern("S").pattern("S")
+                    .define('D', ConventionalItemTags.DIAMOND_GEMS)
+                    .define('S', ConventionalItemTags.WOODEN_RODS)
+                    .unlockedBy("has_diamond", has(ConventionalItemTags.DIAMOND_GEMS))
+                    .save(output);
+
             shaped(TOOLS, QUERN)
                     .pattern("PPP").pattern("SSS")
                     .define('P', POLISHED_STONES)
@@ -65,6 +96,19 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                     .pattern("T  ").pattern("SSS").define('S', ConventionalItemTags.STONES)
                     .define('T', ConventionalItemTags.WOODEN_RODS)
                     .unlockedBy("has_polished_stone", has(POLISHED_STONES)).save(output);
+
+            shaped(DECORATIONS, FLUID_BARREL)
+                    .pattern("P P").pattern("P P").pattern("PPP")
+                    .define('P', PLANKS)
+                    .unlockedBy("has_planks", has(PLANKS))
+                    .save(output);
+
+            shaped(DECORATIONS, BARREL_RACK)
+                    .pattern("PPP").pattern("S S").pattern("S S")
+                    .define('P', PLANKS)
+                    .define('S', ConventionalItemTags.WOODEN_RODS)
+                    .unlockedBy("has_planks", has(PLANKS))
+                    .save(output);
 
             QuernRecipe.save(Ingredient.of(WHEAT_GRAIN), WHEAT_FLOUR, has(WHEAT_GRAIN), output);
 
@@ -101,6 +145,26 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                             null,
                             FluidStack.of(ClimaticFluids.YEAST, (int) fromBucketFraction(600, 1000)),
                             5*60*20, has(YEAST_STARTER_INGREDIENTS), output);
+
+            shapeless(FOOD, YEAST_CULTURE, 8)
+                    .requires(YEAST_BUCKET)
+                    .unlockedBy(getHasName(YEAST_BUCKET), has(YEAST_BUCKET))
+                    .save(output, createKey("yeast_culture"));
+
+            shapeless(FOOD, WHEAT_DOUGH, 4)
+                    .requires(WHEAT_FLOUR).requires(YEAST_CULTURE).requires(SWEETENERS)
+                    .unlockedBy(getHasName(WHEAT_FLOUR), has(WHEAT_FLOUR))
+                    .save(output, createKey("wheat_dough"));
+
+            SimpleCookingRecipeBuilder
+                    .smoking(Ingredient.of(WHEAT_DOUGH), MISC, Items.BREAD, 0.35f, 100)
+                    .unlockedBy(getHasName(WHEAT_DOUGH), has(WHEAT_DOUGH))
+                    .save(output, createKey("wheat_dough_bread"));
+
+            SimpleCookingRecipeBuilder
+                    .campfireCooking(Ingredient.of(WHEAT_DOUGH), MISC, Items.BREAD, 0.35f, 100)
+                    .unlockedBy(getHasName(WHEAT_DOUGH), has(WHEAT_DOUGH))
+                    .save(output, createKey("wheat_dough_bread_campfire"));
         }
 
         private ResourceKey<Recipe<?>> createKey(String id) {

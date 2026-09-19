@@ -254,6 +254,13 @@ public class FluidBarrelBlockEntity extends BlockEntity implements StorageContai
     }
 
     @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        if (!state.getValue(FluidBarrelBlock.SEALED)) {
+            super.preRemoveSideEffects(pos, state);
+        }
+    }
+
+    @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return saveWithoutMetadata(registries);
     }

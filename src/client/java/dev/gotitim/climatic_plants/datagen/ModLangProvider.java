@@ -33,6 +33,8 @@ public abstract class ModLangProvider extends FabricLanguageProvider {
         public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder builder) {
             builder.add(ClimaticItems.CARROT_SEEDS, "Carrot Seeds");
             builder.add(ClimaticBlocks.QUERN.asItem(), "Quern");
+            builder.add(ClimaticBlocks.FLUID_BARREL.asItem(), "Fluid Barrel");
+            builder.add(ClimaticBlocks.BARREL_RACK.asItem(), "Barrel Rack");
             builder.add(ClimaticItems.HANDSTONE, "Handstone");
             builder.add(ClimaticItems.FLINT_KNIFE, "Flint Knife");
             builder.add(ClimaticItems.COPPER_KNIFE, "Copper Knife");
@@ -41,8 +43,14 @@ public abstract class ModLangProvider extends FabricLanguageProvider {
 
             builder.add(ClimaticItems.WHEAT_GRAIN, "Wheat Grain");
             builder.add(ClimaticItems.WHEAT_FLOUR, "Wheat Flour");
+            builder.add(ClimaticItems.WHEAT_DOUGH, "Wheat Dough");
             builder.add(ClimaticItems.WHEAT_FLATBREAD_DOUGH, "Wheat Flatbread Dough");
             builder.add(ClimaticItems.WHEAT_FLATBREAD, "Wheat Flatbread");
+            builder.add(ClimaticItems.YEAST_BUCKET, "Yeast Bucket");
+            builder.add(ClimaticItems.YEAST_CULTURE, "Yeast Culture");
+
+            builder.add("block.climatic_plants.yeast", "Yeast");
+            builder.add("fluid.climatic_plants.yeast", "Yeast");
 
             builder.add(QUERN_DRAG, "Quern grinding");
 
@@ -50,6 +58,9 @@ public abstract class ModLangProvider extends FabricLanguageProvider {
             builder.add(ClimaticTags.KNIVES, "Knives");
             builder.add(ClimaticTags.FLINT_TOOL_MATERIALS, "Flint tool materials");
             builder.add(ClimaticTags.MINEABLE_WITH_KNIFE, "Mineable with knife");
+            builder.add(ClimaticTags.YEAST_STARTER_INGREDIENTS, "Yeast starter ingredients");
+            builder.add(ClimaticTags.SWEETENERS, "Sweeteners");
+            builder.add(ClimaticTags.PLANKS, "Planks");
         }
     }
 

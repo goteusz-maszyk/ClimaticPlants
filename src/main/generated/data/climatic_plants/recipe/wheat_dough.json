@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "climatic_plants:wheat_flour",
+    "climatic_plants:yeast_culture",
+    "#c:foods/sweeteners"
+  ],
+  "result": {
+    "count": 4,
+    "id": "climatic_plants:wheat_dough"
+  }
+}

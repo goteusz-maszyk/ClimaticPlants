@@ -13,6 +13,7 @@ public class ModItemIds {
     public static final ResourceKey<Item> WHEAT_FLOUR = createKey("wheat_flour");
     public static final ResourceKey<Item> WHEAT_FLATBREAD_DOUGH = createKey("wheat_flatbread_dough");
     public static final ResourceKey<Item> WHEAT_DOUGH = createKey("wheat_dough");
+    public static final ResourceKey<Item> YEAST_CULTURE = createKey("yeast_culture");
 
     private static ResourceKey<Item> createKey(String name) {
         return ResourceKey.create(Registries.ITEM, ClimaticPlants.identifier(name));

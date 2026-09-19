@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_item": {
+    "has_planks": {
       "conditions": {
         "items": [
           {
-            "items": "#climatic_plants:yeast_starter_ingredients"
+            "items": "#c:planks"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "climatic_plants:yeast_multiply"
+        "recipe": "climatic_plants:fluid_barrel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_item"
+      "has_planks"
     ]
   ],
   "rewards": {
     "recipes": [
-      "climatic_plants:yeast_multiply"
+      "climatic_plants:fluid_barrel"
     ]
   }
 }

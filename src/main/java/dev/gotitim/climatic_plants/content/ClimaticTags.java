@@ -17,6 +17,8 @@ public class ClimaticTags {
     public static final TagKey<Item> FLINT_TOOL_MATERIALS = TagKey.create(Registries.ITEM, identifier("flint_tool_materials"));
     public static final TagKey<Item> KNIVES = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "tools/knife"));
     public static final TagKey<Item> YEAST_STARTER_INGREDIENTS = TagKey.create(Registries.ITEM, identifier("yeast_starter_ingredients"));
+    public static final TagKey<Item> SWEETENERS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "foods/sweeteners"));
+    public static final TagKey<Item> PLANKS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "planks"));
 
     public static HolderSet<Item> nameForDatagen(TagKey<Item> tagKey) {
         return HolderSet.emptyNamed(BuiltInRegistries.ITEM, tagKey);

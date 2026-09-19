@@ -1,6 +1,15 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "climatic_plants:block/fluid_barrel"
+    "type": "minecraft:condition",
+    "component": "minecraft:block_entity_data",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "climatic_plants:block/fluid_barrel"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "climatic_plants:block/barrel_sealed"
+    },
+    "property": "minecraft:has_component"
   }
 }

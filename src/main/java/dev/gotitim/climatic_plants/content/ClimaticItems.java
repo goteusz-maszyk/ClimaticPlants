@@ -55,6 +55,7 @@ public class ClimaticItems {
     public static final Item YEAST_BUCKET = registerItem(
             "yeast_bucket", p -> new BucketItem(ClimaticFluids.YEAST, p), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)
     );
+    public static final Item YEAST_CULTURE = registerItem(ModItemIds.YEAST_CULTURE);
     public static void init() {
 
     }

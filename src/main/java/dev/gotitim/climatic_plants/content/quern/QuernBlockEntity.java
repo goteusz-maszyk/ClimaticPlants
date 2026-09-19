@@ -286,6 +286,7 @@ public class QuernBlockEntity extends BlockEntity implements Container {
     protected void loadAdditional(final ValueInput input) {
         super.loadAdditional(input);
         recipeTimer = input.getFloatOr("recipeTimer", 0);
+        this.items.clear();
         ContainerHelper.loadAllItems(input, this.items);
     }
 }
