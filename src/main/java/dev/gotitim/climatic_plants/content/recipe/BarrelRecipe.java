@@ -25,7 +25,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
@@ -63,13 +62,14 @@ public class BarrelRecipe implements Recipe<BarrelRecipe.BarrelRecipeInput> {
 
     public static final RecipeBookCategory BARREL_CATEGORY = new RecipeBookCategory();
 
-    public final SizedIngredient inputItem;
+    public final @Nullable SizedIngredient inputItem;
     public final FluidStack inputFluid;
-    public final ItemStackTemplate outputItem;
+    public final @Nullable ItemStackTemplate outputItem;
     public final FluidStack outputFluid;
     public final Holder<SoundEvent> sound;
     public final int duration;
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     protected BarrelRecipe(Optional<SizedIngredient> inputItem, FluidStack inputFluid, Optional<ItemStackTemplate> outputItem, FluidStack outputFluid, Holder<SoundEvent> sound, int duration) {
         this.inputItem = inputItem.orElse(null);
         this.inputFluid = inputFluid;
@@ -78,7 +78,7 @@ public class BarrelRecipe implements Recipe<BarrelRecipe.BarrelRecipeInput> {
         this.sound = sound;
         this.duration = duration;
     }
-    protected BarrelRecipe(SizedIngredient inputItem, FluidStack inputFluid, ItemStackTemplate outputItem, FluidStack outputFluid, Holder<SoundEvent> sound, int duration) {
+    protected BarrelRecipe(@Nullable SizedIngredient inputItem, FluidStack inputFluid, @Nullable ItemStackTemplate outputItem, FluidStack outputFluid, Holder<SoundEvent> sound, int duration) {
         this.inputItem = inputItem;
         this.inputFluid = inputFluid;
         this.outputItem = outputItem;
@@ -91,42 +91,18 @@ public class BarrelRecipe implements Recipe<BarrelRecipe.BarrelRecipeInput> {
         return duration <= 0;
     }
 
-    public static Optional<RecipeHolder<BarrelRecipe>> get(@Nullable ServerLevel level, ItemStack inputStack, SingleFluidStorage fluidStorage) {
+    public static Optional<RecipeHolder<BarrelRecipe>> get(ServerLevel level, ItemStack inputStack, SingleFluidStorage fluidStorage) {
         return level.getServer().getRecipeManager()
                     .getRecipeFor(BarrelRecipe.TYPE, new BarrelRecipeInput(inputStack, fluidStorage), level);
     }
 
-    public static void saveInstant(SizedIngredient ingredient, FluidStack inputFluid, ItemStackTemplate outputItem, FluidStack outputFluid, Holder<SoundEvent> sound,
-                                   Criterion<InventoryChangeTrigger.TriggerInstance> unlockedBy,
-                                   RecipeOutput output) {
-        save(ingredient, inputFluid, outputItem, outputFluid, 0, unlockedBy, output);
-    }
-
-    public static void save(SizedIngredient ingredient, FluidStack inputFluid, ItemStackTemplate outputItem, FluidStack outputFluid, int duration,
-                            Criterion<InventoryChangeTrigger.TriggerInstance> unlockedBy,
-                            RecipeOutput output) {
-        save(ingredient, inputFluid, outputItem, outputFluid, duration, Holder.direct(SoundEvents.BREWING_STAND_BREW), unlockedBy, output);
-    }
-
-    public static void save(SizedIngredient ingredient, FluidStack inputFluid, ItemStackTemplate outputItem, FluidStack outputFluid, int duration, Holder<SoundEvent> sound,
-                            Criterion<InventoryChangeTrigger.TriggerInstance> unlockedBy,
-                            RecipeOutput output) {
-        BarrelRecipe recipe = new BarrelRecipe(ingredient, inputFluid, outputItem, outputFluid, sound, duration);
-        ResourceKey<Recipe<?>> key = ResourceKey.create(
-                Registries.RECIPE, recipe.getOutputKey().identifier());
-
-        var advancementBuilder = new RecipeUnlockAdvancementBuilder();
-        advancementBuilder.unlockedBy("has_item", unlockedBy);
-        output.accept(key, recipe, advancementBuilder.build(output, key, RecipeCategory.FOOD));
-    }
-
-    public static void save(String name, SizedIngredient ingredient, FluidStack inputFluid, ItemStackTemplate outputItem, FluidStack outputFluid, int duration,
+    public static void save(String name, SizedIngredient ingredient, FluidStack inputFluid, @Nullable ItemStackTemplate outputItem, FluidStack outputFluid, int duration,
                             Criterion<InventoryChangeTrigger.TriggerInstance> unlockedBy,
                             RecipeOutput output) {
         save(name, ingredient, inputFluid, outputItem, outputFluid, duration, Holder.direct(SoundEvents.BREWING_STAND_BREW), unlockedBy, output);
     }
 
-    public static void save(String name, SizedIngredient ingredient, FluidStack inputFluid, ItemStackTemplate outputItem, FluidStack outputFluid, int duration, Holder<SoundEvent> sound,
+    public static void save(String name, SizedIngredient ingredient, FluidStack inputFluid, @Nullable ItemStackTemplate outputItem, FluidStack outputFluid, int duration, Holder<SoundEvent> sound,
                             Criterion<InventoryChangeTrigger.TriggerInstance> unlockedBy,
                             RecipeOutput output) {
         BarrelRecipe recipe = new BarrelRecipe(ingredient, inputFluid, outputItem, outputFluid, sound, duration);
@@ -138,17 +114,13 @@ public class BarrelRecipe implements Recipe<BarrelRecipe.BarrelRecipeInput> {
         output.accept(key, recipe, advancementBuilder.build(output, key, RecipeCategory.FOOD));
     }
 
-    private ResourceKey<?> getOutputKey() {
-        return (outputItem == null ? outputFluid.fluidVariant() : outputItem).typeHolder().unwrapKey().get();
-    }
-
     @Override
     public boolean matches(BarrelRecipeInput input, Level level) {
         return (inputItem == null || inputItem.test(input.itemStack)) && inputFluid.test(input.fluidStack);
     }
 
     @Override
-    public @NonNull ItemStack assemble(BarrelRecipeInput input) {
+    public ItemStack assemble(BarrelRecipeInput input) {
         return outputItem == null ? ItemStack.EMPTY : outputItem.create();
     }
 
@@ -168,12 +140,12 @@ public class BarrelRecipe implements Recipe<BarrelRecipe.BarrelRecipeInput> {
     }
 
     @Override
-    public @NonNull RecipeSerializer<? extends Recipe<BarrelRecipeInput>> getSerializer() {
+    public RecipeSerializer<? extends Recipe<BarrelRecipeInput>> getSerializer() {
         return SERIALIZER;
     }
 
     @Override
-    public @NonNull RecipeType<? extends Recipe<BarrelRecipeInput>> getType() {
+    public RecipeType<? extends Recipe<BarrelRecipeInput>> getType() {
         return TYPE;
     }
 
@@ -187,6 +159,7 @@ public class BarrelRecipe implements Recipe<BarrelRecipe.BarrelRecipeInput> {
         return BARREL_CATEGORY;
     }
 
+    @SuppressWarnings("EmptyMethod")
     public static void init() {
     }
 

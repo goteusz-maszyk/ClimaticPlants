@@ -24,7 +24,7 @@ public abstract class ResultSlotMixin {
     )
     private ItemStack reduceDurabilityInstead(CraftingContainer instance, int slot, int amount,
                                               Operation<ItemStack> original,
-                                              @Local(argsOnly = true) Player player) {
+                                              @Local(argsOnly = true, name = "player") Player player) {
         ItemStack stack = instance.getItem(slot);
         if (!(player.level() instanceof ServerLevel serverLevel)) return stack;
 

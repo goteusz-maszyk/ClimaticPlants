@@ -16,7 +16,7 @@ public class ClimaticSounds {
         );
     }
 
+    @SuppressWarnings("EmptyMethod")
     public static void init() {
-
     }
 }

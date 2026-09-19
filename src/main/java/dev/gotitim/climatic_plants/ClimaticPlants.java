@@ -21,11 +21,13 @@ public class ClimaticPlants implements ModInitializer {
     public static final String MOD_ID = "climatic_plants";
     public static final Logger LOGGER = LoggerFactory.getLogger("ClimaticPlants");
 
-    public static final UniversalDataManager<ClimateRange> climateRanges = new UniversalDataManager<>(
-            "climate_range",
-            ClimateRange.CODEC,
-            new ClimateRange(Integer.MIN_VALUE, Integer.MAX_VALUE, Float.MIN_VALUE, Float.MAX_VALUE)
+    public static final UniversalDataManager<ClimateRange> climateRanges = new UniversalDataManager<>("climate_range",
+            ClimateRange.CODEC, new ClimateRange(Integer.MIN_VALUE, Integer.MAX_VALUE, Float.MIN_VALUE, Float.MAX_VALUE)
     );
+
+    public static Identifier identifier(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
+    }
 
     @Override
     public void onInitialize() {
@@ -39,18 +41,13 @@ public class ClimaticPlants implements ModInitializer {
 
         climateRanges.register();
 
-        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(output -> {
-            output.insertAfter(Items.WHEAT_SEEDS, ClimaticItems.CARROT_SEEDS);
-        });
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS)
+                             .register(output -> output.insertAfter(Items.WHEAT_SEEDS, ClimaticItems.CARROT_SEEDS));
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(output -> {
             output.insertAfter(Items.STONE_HOE, ClimaticItems.FLINT_KNIFE);
             output.insertAfter(Items.COPPER_HOE, ClimaticItems.COPPER_KNIFE);
             output.insertAfter(Items.IRON_HOE, ClimaticItems.IRON_KNIFE);
             output.insertAfter(Items.DIAMOND_HOE, ClimaticItems.DIAMOND_KNIFE);
         });
-    }
-
-    public static Identifier identifier(String path) {
-        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 }

@@ -18,12 +18,6 @@ public record Crop(String name, Block block, Item seedsItem, Item harvestItem) {
 
     public static final Crop POTATO = new Crop("potatoes", Blocks.POTATOES, Items.POTATO, Items.POTATO);
 
-//    public static final Crop MELON = new Crop();
-//    public static final Crop PUMPKIN = new Crop();
-//
-//    public static final Crop SWEET_BERRIES = new Crop();
-
-//    public static final Crop SUGAR_CANE = new Crop(Blocks.SUGAR_CANE, Items.SUGAR_CANE, Items.SUGAR_CANE);
     public static final List<Crop> ALL_CROPS = List.of(
             WHEAT, CARROT, BEETROOT, POTATO
     );

@@ -25,7 +25,7 @@ public final class ItemUtils {
      * If the item is empty or the block is full, transfers block -> item.
      * Otherwise, transfers item -> block.
      *
-     * @return
+     * @return whether transfer was successful
      */
     public static boolean transferFluid(ItemStack heldStack, BlockEntity blockEntity, Player player, InteractionHand hand) {
         Level level = blockEntity.getLevel();

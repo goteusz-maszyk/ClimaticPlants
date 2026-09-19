@@ -58,6 +58,7 @@ public class FluidBarrelBlockEntity extends BlockEntity implements StorageContai
     }
 
     private void tickServer(BlockPos pos, BlockState state) {
+        assert level != null;
         if (getItem(SLOT_MAIN).isEmpty() && !getItem(SLOT_OVERFLOW).isEmpty()) {
             items.set(SLOT_MAIN, getItem(SLOT_OVERFLOW));
             items.set(SLOT_OVERFLOW, ItemStack.EMPTY);

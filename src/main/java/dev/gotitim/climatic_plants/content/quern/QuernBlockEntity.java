@@ -33,7 +33,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
@@ -50,7 +49,7 @@ public class QuernBlockEntity extends BlockEntity implements Container {
 
     public final NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
     public float recipeTimer;
-    private QuernRecipe activeRecipe;
+    private @Nullable QuernRecipe activeRecipe;
 
     public QuernBlockEntity(BlockPos pos, BlockState state) {
         super(ClimaticBlockEntities.QUERN, pos, state);
@@ -112,7 +111,7 @@ public class QuernBlockEntity extends BlockEntity implements Container {
     }
 
     @Override
-    public @NonNull CompoundTag getUpdateTag(HolderLookup.@NonNull Provider registries) {
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return saveWithoutMetadata(registries);
     }
 
@@ -216,12 +215,12 @@ public class QuernBlockEntity extends BlockEntity implements Container {
     }
 
     @Override
-    public @NonNull ItemStack getItem(final int slot) {
+    public ItemStack getItem(final int slot) {
         return this.items.get(slot);
     }
 
     @Override
-    public @NonNull ItemStack removeItem(final int slot, final int count) {
+    public ItemStack removeItem(final int slot, final int count) {
         ItemStack result = ContainerHelper.removeItem(this.items, slot, count);
         if (!result.isEmpty()) {
             this.setChanged();
@@ -230,7 +229,7 @@ public class QuernBlockEntity extends BlockEntity implements Container {
         return result;
     }
 
-    public @NonNull ItemStack removeItem(final int slot) {
+    public ItemStack removeItem(final int slot) {
         ItemStack stack = this.removeItemNoUpdate(slot);
         if (slot != SLOT_OUTPUT) {
             finishGrinding();
@@ -243,18 +242,18 @@ public class QuernBlockEntity extends BlockEntity implements Container {
     }
 
     @Override
-    public @NonNull ItemStack removeItemNoUpdate(final int slot) {
+    public ItemStack removeItemNoUpdate(final int slot) {
         return ContainerHelper.takeItem(this.items, slot);
     }
 
     @Override
-    public void setItem(final int slot, final @NonNull ItemStack itemStack) {
+    public void setItem(final int slot, final ItemStack itemStack) {
         this.items.set(slot, itemStack);
         this.setChanged();
     }
 
     @Override
-    public boolean stillValid(final @NonNull Player player) {
+    public boolean stillValid(final Player player) {
         return Container.stillValidBlockEntity(this, player);
     }
 

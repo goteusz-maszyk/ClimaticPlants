@@ -6,7 +6,6 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.jspecify.annotations.NonNull;
 
 public interface StorageContainer extends Container {
 
@@ -21,12 +20,12 @@ public interface StorageContainer extends Container {
     }
 
     @Override
-    default @NonNull ItemStack getItem(int slot) {
+    default ItemStack getItem(int slot) {
         return getItems().get(slot);
     }
 
     @Override
-    default @NonNull ItemStack removeItem(int slot, int count) {
+    default ItemStack removeItem(int slot, int count) {
         ItemStack result = ContainerHelper.removeItem(getItems(), slot, count);
         if (!result.isEmpty()) {
             this.setChanged();

@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
-import org.jspecify.annotations.NonNull;
 
 import static net.minecraft.client.data.models.BlockModelGenerators.*;
 
@@ -29,12 +28,12 @@ public class ModModelProvider extends FabricModelProvider {
     }
 
     @Override
-    public @NonNull String getName() {
+    public String getName() {
         return "ClimaticPlantsModelProvider";
     }
 
     @Override
-    public void generateBlockStateModels(@NonNull BlockModelGenerators generator) {
+    public void generateBlockStateModels(BlockModelGenerators generator) {
         for (Crop crop : Crop.ALL_CROPS) {
             Material deadTexture = new Material(ClimaticPlants.identifier("block/crop/" + crop.name() + "_dead"));
             Material youngTexture = new Material(

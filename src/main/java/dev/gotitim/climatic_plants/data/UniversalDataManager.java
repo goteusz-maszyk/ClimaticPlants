@@ -52,6 +52,6 @@ public class UniversalDataManager<T> extends SimpleJsonResourceReloadListener<T>
     }
 
     public Optional<T> get(Block block) {
-        return get(BuiltInRegistries.BLOCK.getResourceKey(block).map(ResourceKey::identifier).get());
+        return get(BuiltInRegistries.BLOCK.getResourceKey(block).map(ResourceKey::identifier).orElseThrow());
     }
 }

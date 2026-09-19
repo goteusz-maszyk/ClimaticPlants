@@ -15,8 +15,8 @@ public class ClimaticFluids {
         return Registry.register(BuiltInRegistries.FLUID, key, fluid);
     }
 
+    @SuppressWarnings("EmptyMethod")
     public static void init() {
-
     }
 
     public static class Ids {

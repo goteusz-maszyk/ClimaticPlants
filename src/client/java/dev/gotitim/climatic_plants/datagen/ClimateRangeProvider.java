@@ -8,7 +8,6 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
-import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +21,7 @@ public class ClimateRangeProvider implements DataProvider {
     }
 
     @Override
-    public @NonNull CompletableFuture<?> run(@NonNull CachedOutput cache) {
+    public CompletableFuture<?> run(CachedOutput cache) {
         Map<Crop, ClimateRange> climates = new HashMap<>();
         climates.put(Crop.WHEAT, new ClimateRange.Builder().hydration(15, 85).temperature(-7, 22).build());
         climates.put(Crop.POTATO, new ClimateRange.Builder().hydration(35, 90).temperature(-7, 22).build());
@@ -38,7 +37,7 @@ public class ClimateRangeProvider implements DataProvider {
     }
 
     @Override
-    public @NonNull String getName() {
+    public String getName() {
         return "Climate Ranges";
     }
 }

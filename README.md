@@ -5,13 +5,15 @@
 
 # General
 
-Some *improvements* to the plant growth. Inspired by [Demaning Saplings](https://modrinth.com/mod/demanding-saplings).
+Some *improvements* to the plant growth. Inspired by [Demanding Saplings](https://modrinth.com/mod/demanding-saplings).
 
-Well, now trying to plant a spruce on badlands or a cactus in freezing cold mountains will result in failure. Depending how much different the temperature is to the preferred one, the lower is the chance of growing.
+Well, now trying to plant a spruce on badlands or a cactus in freezing cold mountains will result in failure. Depending on how much different the temperature is to the preferred one, the lower is the chance of growing.
 
 This mod uses Minecraft's already existing biome temperature system and also a height mechanic for more dynamic values on higher altitudes.
 
-If a sapling is placed on a temperature outside of its compatible range, it will perish into 1 of 3 different dead bushes, if the temperature is way too high for the sapling, it will become into a vanilla dead bush, if the temperature is slightly off, it will become a dead sapling, and if the temperature is way too cold, it will become a frozen bush.
+If a sapling is placed on a temperature outside its compatible range, it will perish into 1 of 3 different dead bushes.
+If the temperature is way too high for the sapling, it will become into a vanilla dead bush, if the temperature is slightly off, it will become a dead sapling.
+If the temperature is way too cold, it will become a frozen bush.
 
 ## Plans
 (the entries will be removed from the list as they are added)

@@ -20,8 +20,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -55,10 +53,11 @@ public class QuernRecipe implements Recipe<SingleRecipeInput> {
         this.result = result;
     }
 
+    @SuppressWarnings("EmptyMethod")
     public static void init() {
     }
 
-    public static Optional<RecipeHolder<QuernRecipe>> get(@Nullable ServerLevel level, ItemStack inputStack) {
+    public static Optional<RecipeHolder<QuernRecipe>> get(ServerLevel level, ItemStack inputStack) {
         return level.getServer().getRecipeManager()
                     .getRecipeFor(QuernRecipe.TYPE, new SingleRecipeInput(inputStack), level);
     }
@@ -75,12 +74,12 @@ public class QuernRecipe implements Recipe<SingleRecipeInput> {
     }
 
     @Override
-    public boolean matches(SingleRecipeInput input, @NonNull Level level) {
+    public boolean matches(SingleRecipeInput input, Level level) {
         return ingredient.test(input.item());
     }
 
     @Override
-    public @NonNull ItemStack assemble(@NonNull SingleRecipeInput input) {
+    public ItemStack assemble(SingleRecipeInput input) {
         return result.create();
     }
 

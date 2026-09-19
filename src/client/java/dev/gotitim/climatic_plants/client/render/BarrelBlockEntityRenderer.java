@@ -28,7 +28,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -48,12 +47,12 @@ public class BarrelBlockEntityRenderer implements BlockEntityRenderer<FluidBarre
     }
 
     @Override
-    public @NonNull BarrelRenderState createRenderState() {
+    public BarrelRenderState createRenderState() {
         return new BarrelRenderState();
     }
 
     @Override
-    public void extractRenderState(@NonNull FluidBarrelBlockEntity blockEntity, @NonNull BarrelRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+    public void extractRenderState(FluidBarrelBlockEntity blockEntity, BarrelRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
         state.shouldRender = !blockEntity.getBlockState().getValue(FluidBarrelBlock.SEALED) && blockEntity.getBlockState().getValue(FluidBarrelBlock.FACING) == Direction.UP;
         state.fluidFill = blockEntity.getFluidFillPercent();
@@ -77,6 +76,7 @@ public class BarrelBlockEntityRenderer implements BlockEntityRenderer<FluidBarre
     public void submit(BarrelRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
         if (!state.shouldRender) return;
 
+        assert state.fluidVariant != null;
         if (!state.fluidVariant.isBlank() && state.fluidFill > 0) {
             float shrink = state.fluidFill > 0.03f ? 0f : (0.03f - state.fluidFill) * 7f;
             final float minX = MIN_XZ + shrink;
@@ -125,7 +125,7 @@ public class BarrelBlockEntityRenderer implements BlockEntityRenderer<FluidBarre
         public boolean shouldRender;
         public float fluidFill;
         public List<ItemStackRenderState> items = new ArrayList<>();
-        public FluidVariant fluidVariant;
+        public @Nullable FluidVariant fluidVariant;
         public @Nullable BlockAndTintGetter level;
     }
 }

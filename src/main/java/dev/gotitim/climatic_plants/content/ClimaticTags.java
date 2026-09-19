@@ -20,6 +20,7 @@ public class ClimaticTags {
     public static final TagKey<Item> SWEETENERS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "foods/sweeteners"));
     public static final TagKey<Item> PLANKS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("c", "planks"));
 
+    @SuppressWarnings("deprecation")
     public static HolderSet<Item> nameForDatagen(TagKey<Item> tagKey) {
         return HolderSet.emptyNamed(BuiltInRegistries.ITEM, tagKey);
     }

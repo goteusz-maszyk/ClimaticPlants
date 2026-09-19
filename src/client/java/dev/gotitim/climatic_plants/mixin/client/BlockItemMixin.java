@@ -20,7 +20,7 @@ public abstract class BlockItemMixin {
     public abstract Item getItem();
 
     @Inject(method = "getTooltipLines", at = @At(value = "TAIL"))
-    public void appendHoverText(Item.TooltipContext tooltipContext, @Nullable Player player, TooltipFlag tooltipFlag, CallbackInfoReturnable<List<Component>> cir) {
+    public void appendHoverText(Item.TooltipContext context, @Nullable Player player, TooltipFlag tooltipFlag, CallbackInfoReturnable<List<Component>> cir) {
 //        if (player == null) {
 //            return;
 //        }

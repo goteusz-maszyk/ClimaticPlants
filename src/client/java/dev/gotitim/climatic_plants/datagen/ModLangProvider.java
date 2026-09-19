@@ -6,7 +6,6 @@ import dev.gotitim.climatic_plants.content.ClimaticTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
-import org.jspecify.annotations.NonNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -19,7 +18,7 @@ public abstract class ModLangProvider extends FabricLanguageProvider {
     }
 
     @Override
-    public @NonNull String getName() {
+    public String getName() {
         return "ClimaticPlantsLangProvider::" + getClass().getSimpleName();
     }
 

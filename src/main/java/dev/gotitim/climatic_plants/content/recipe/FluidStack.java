@@ -26,7 +26,7 @@ public final class FluidStack implements Predicate<SingleFluidStorage> {
             FluidStack::new
     );
     private final FluidVariant fluidVariant;
-    private int amount;
+    private final int amount;
 
     public FluidStack(FluidVariant fluidVariant, int amount) {
         this.fluidVariant = fluidVariant;
@@ -40,10 +40,6 @@ public final class FluidStack implements Predicate<SingleFluidStorage> {
     public boolean test(SingleFluidStorage storage) {
         return fluidVariant.isBlank() || (fluidVariant.is(
                 storage.getResource().getFluid()) && amount <= storage.amount);
-    }
-
-    public void shrink(int amount) {
-        this.amount -= amount;
     }
 
     public FluidVariant fluidVariant() {
@@ -71,9 +67,5 @@ public final class FluidStack implements Predicate<SingleFluidStorage> {
         return "FluidStack[" +
                 "fluidVariant=" + fluidVariant + ", " +
                 "amount=" + amount + ']';
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
     }
 }

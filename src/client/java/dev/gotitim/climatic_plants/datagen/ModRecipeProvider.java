@@ -18,7 +18,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.material.Fluids;
-import org.jspecify.annotations.NonNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -35,13 +34,11 @@ public class ModRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    @NonNull
     protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
         return new IntlRecipeProvider(registries, output);
     }
 
     @Override
-    @NonNull
     public String getName() {
         return "Recipes";
     }

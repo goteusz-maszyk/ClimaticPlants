@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.NonNull;
 
 public class DeadCropBlock extends BushBlock {
     public static final VoxelShape QUARTER_SHAPE = box(2, 0, 2, 14, 4, 14);
@@ -31,7 +30,7 @@ public class DeadCropBlock extends BushBlock {
     }
 
     @Override
-    protected @NonNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return state.getValue(MATURE) ? FULL_SHAPE : QUARTER_SHAPE;
     }
 

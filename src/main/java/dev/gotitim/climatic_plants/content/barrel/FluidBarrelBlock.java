@@ -41,7 +41,6 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
@@ -133,9 +132,9 @@ public class FluidBarrelBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected @NonNull BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks,
-                                              BlockPos pos, Direction directionToNeighbour, BlockPos neighbourPos,
-                                              BlockState neighbourState, RandomSource random) {
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks,
+                                     BlockPos pos, Direction directionToNeighbour, BlockPos neighbourPos,
+                                     BlockState neighbourState, RandomSource random) {
         if (state.getValue(FACING).getAxis().isHorizontal() && directionToNeighbour == Direction.DOWN && !level
                 .getBlockState(neighbourPos).isFaceSturdy(level, neighbourPos, Direction.UP, SupportType.CENTER)) {
             return Blocks.AIR.defaultBlockState();
@@ -197,7 +196,7 @@ public class FluidBarrelBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected boolean hasAnalogOutputSignal(@NonNull BlockState state) {
+    protected boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 

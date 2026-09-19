@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class BarrelRackBlock extends Block {
@@ -24,7 +23,7 @@ public class BarrelRackBlock extends Block {
     }
 
     @Override
-    protected @NonNull BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks,
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks,
                                               BlockPos pos, Direction directionToNeighbour, BlockPos neighbourPos,
                                               BlockState neighbourState, RandomSource random) {
         if (directionToNeighbour == Direction.DOWN && !neighbourState.isFaceSturdy(level, neighbourPos, Direction.UP)) {
@@ -35,7 +34,7 @@ public class BarrelRackBlock extends Block {
     }
 
     @Override
-    protected @NonNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos,
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos,
                                            CollisionContext context) {
         return FluidBarrelBlock.RACK_SHAPE;
     }

@@ -29,7 +29,6 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import static dev.gotitim.climatic_plants.content.quern.QuernBlockEntity.*;
@@ -54,8 +53,8 @@ public class QuernBlock extends BaseEntityBlock {
     private static final VoxelShape COLLISION_FULL_SHAPE = Shapes.or(BASE_SHAPE, HANDSTONE_SHAPE);
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, @NonNull BlockState blockState,
-                                                                            @NonNull BlockEntityType<T> type) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState,
+                                                                            BlockEntityType<T> type) {
         return createTickerHelper(type, ClimaticBlockEntities.QUERN, QuernBlockEntity::tick);
     }
 

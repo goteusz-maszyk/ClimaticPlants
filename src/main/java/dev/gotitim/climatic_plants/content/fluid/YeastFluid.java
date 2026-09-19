@@ -36,11 +36,6 @@ public class YeastFluid extends Fluid {
     }
 
     @Override
-    protected boolean isEmpty() {
-        return false;
-    }
-
-    @Override
     protected float getExplosionResistance() {
         return 1000.0F;
     }

@@ -38,7 +38,7 @@ public class ModLootTableProvider extends FabricBlockLootSubProvider {
     @Override
     public void generate() {
         LootItemFunction.Builder addCropFromFortune = ApplyBonusCount.addBonusBinomialDistributionCount(
-                registries.lookup(Registries.ENCHANTMENT).get().get(Enchantments.FORTUNE).get(),
+                registries.lookup(Registries.ENCHANTMENT).orElseThrow().get(Enchantments.FORTUNE).orElseThrow(),
                 0.5714286f,
                 3
         );

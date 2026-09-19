@@ -30,7 +30,6 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import org.jspecify.annotations.NonNull;
 
 public class KnifeItem extends Item {
 	public KnifeItem(Properties properties) {
@@ -50,7 +49,7 @@ public class KnifeItem extends Item {
 	}
 
 	@Override
-	public @NonNull InteractionResult useOn(UseOnContext context) {
+	public InteractionResult useOn(UseOnContext context) {
 		Level level = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 		BlockState state = level.getBlockState(pos);
