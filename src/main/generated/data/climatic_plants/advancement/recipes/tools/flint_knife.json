@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "climatic_plants:flint_knife"
+        "recipes": "climatic_plants:flint_knife"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

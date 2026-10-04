@@ -1,6 +1,5 @@
 package dev.gotitim.climatic_plants.content.barrel;
 
-import com.mojang.serialization.MapCodec;
 import dev.gotitim.climatic_plants.ClimaticBlockEntities;
 import dev.gotitim.climatic_plants.ClimaticPlants;
 import dev.gotitim.climatic_plants.content.ClimaticBlocks;
@@ -9,6 +8,8 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -228,7 +229,7 @@ public class FluidBarrelBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state,
+    public void playerDestroy(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state,
                               @Nullable BlockEntity blockEntity, ItemStack tool) {
         if (state.getValue(SEALED) && blockEntity instanceof FluidBarrelBlockEntity barrel) {
             player.awardStat(Stats.BLOCK_MINED.get(this));
@@ -254,11 +255,6 @@ public class FluidBarrelBlock extends BaseEntityBlock {
         }
         stack.applyComponents(barrel.collectComponents());
         return stack;
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return simpleCodec(FluidBarrelBlock::new);
     }
 
     @Override

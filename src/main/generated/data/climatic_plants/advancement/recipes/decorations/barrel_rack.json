@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "climatic_plants:barrel_rack"
+        "recipes": "climatic_plants:barrel_rack"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "climatic_plants:yeast_multiply"
+        "recipes": "climatic_plants:yeast_multiply"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

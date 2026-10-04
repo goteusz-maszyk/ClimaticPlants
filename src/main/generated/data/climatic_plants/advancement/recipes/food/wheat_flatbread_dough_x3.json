@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "climatic_plants:wheat_flatbread_dough_x3"
+        "recipes": "climatic_plants:wheat_flatbread_dough_x3"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

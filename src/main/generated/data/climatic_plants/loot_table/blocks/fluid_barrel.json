@@ -8,25 +8,23 @@
           "name": "climatic_plants:fluid_barrel"
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     },
     {
-      "conditions": [
-        {
-          "block": "climatic_plants:fluid_barrel",
-          "condition": "minecraft:block_state_property",
-          "properties": {
-            "rack": "true"
-          }
+      "condition": {
+        "type": "minecraft:match_block",
+        "blocks": "climatic_plants:fluid_barrel",
+        "state": {
+          "rack": "true"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
           "name": "climatic_plants:barrel_rack"
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     }
   ]
 }

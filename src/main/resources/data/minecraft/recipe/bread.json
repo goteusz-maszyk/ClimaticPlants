@@ -3,12 +3,5 @@
     {
       "condition": "fabric:false"
     }
-  ],
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    "minecraft:air"
-  ],
-  "result": {
-    "id": "minecraft:air"
-  }
+  ]
 }

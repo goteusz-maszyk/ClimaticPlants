@@ -41,7 +41,7 @@ public class ClimaticBlocks {
                     ResourceKey.create(Registries.BLOCK, ClimaticPlants.identifier("dead_" + crop.name())),
                     p -> new DeadCropBlock(crop, p),
                     BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().instabreak()
-                                             .sound(SoundType.CROP).pushReaction(PushReaction.DESTROY)
+                                             .sound(SoundType.CROP).pushReaction(PushReaction.POPPED)
             )
     );
 

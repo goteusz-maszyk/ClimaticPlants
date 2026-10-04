@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "climatic_plants:wheat_grain"
+        "recipes": "climatic_plants:wheat_grain"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "climatic_plants:wheat_dough_bread_campfire"
+        "recipes": "climatic_plants:wheat_dough_bread_campfire"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

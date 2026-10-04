@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "climatic_plants:handstone"
+        "recipes": "climatic_plants:handstone"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

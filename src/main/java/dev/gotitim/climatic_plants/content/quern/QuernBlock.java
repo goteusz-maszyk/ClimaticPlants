@@ -1,7 +1,6 @@
 package dev.gotitim.climatic_plants.content.quern;
 
 import com.mojang.math.Constants;
-import com.mojang.serialization.MapCodec;
 import dev.gotitim.climatic_plants.ClimaticBlockEntities;
 import dev.gotitim.climatic_plants.content.ClimaticItems;
 import net.minecraft.core.BlockPos;
@@ -64,11 +63,6 @@ public class QuernBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return simpleCodec(QuernBlock::new);
-    }
-
-    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder.add(HAS_HANDSTONE));
     }
@@ -97,7 +91,7 @@ public class QuernBlock extends BaseEntityBlock {
                 final Vec3 offset = entity.position().subtract(origin).normalize();
                 final Vec3 movement = new Vec3(-offset.z, 0, offset.x).scale(speed / 48f);
                 entity.setDeltaMovement(entity.getDeltaMovement().add(movement));
-                entity.hurtMarked = true;
+                entity.syncVelocity = true;
                 return;
             }
 
@@ -106,7 +100,7 @@ public class QuernBlock extends BaseEntityBlock {
                 entity.setYBodyRot(rot);
                 entity.setOnGround(false);
                 living.setNoActionTime(20);
-                living.hurtMarked = true;
+                living.syncVelocity = true;
             }
         }
     }

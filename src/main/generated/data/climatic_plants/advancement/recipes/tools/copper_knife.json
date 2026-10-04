@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "climatic_plants:copper_knife"
+        "recipes": "climatic_plants:copper_knife"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

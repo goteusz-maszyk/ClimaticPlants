@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "climatic_plants:fluid_barrel"
+        "recipes": "climatic_plants:fluid_barrel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

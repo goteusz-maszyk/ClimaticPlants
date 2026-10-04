@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "climatic_plants:yeast_culture"
+        "recipes": "climatic_plants:yeast_culture"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

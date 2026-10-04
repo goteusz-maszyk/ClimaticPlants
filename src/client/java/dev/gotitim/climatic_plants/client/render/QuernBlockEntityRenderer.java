@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
@@ -51,8 +52,7 @@ public class QuernBlockEntityRenderer implements BlockEntityRenderer<QuernBlockE
         if (!state.handstone.isEmpty()) {
             poseStack.pushPose();
             poseStack.translate(0.5, 0.705, 0.5);
-            float rotation = state.recipeTimer * 360;
-            poseStack.mulPose(Axis.YN.rotationDegrees(rotation));
+            poseStack.rotate(Axis.YN, state.recipeTimer * Mth.TWO_PI);
             poseStack.translate(-0.5, -0.705, -0.5);
             poseStack.translate(0.5, 0.6875, 0.5);
             poseStack.scale(1.25f, 1.25f, 1.25f);
@@ -64,7 +64,7 @@ public class QuernBlockEntityRenderer implements BlockEntityRenderer<QuernBlockE
             float height = state.handstone.isEmpty() ? 0.75f : 0.875f;
             poseStack.pushPose();
             poseStack.translate(0.5, height, 0.5);
-            poseStack.mulPose(Axis.YP.rotationDegrees(45f));
+            poseStack.rotate(Axis.YP, Mth.PI / 4);
             poseStack.scale(0.5f, 0.5f, 0.5f);
             state.inputItem.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
             poseStack.popPose();
@@ -81,8 +81,8 @@ public class QuernBlockEntityRenderer implements BlockEntityRenderer<QuernBlockE
                     case 3 -> poseStack.translate(0.875D - (0.046875D * (i - 48)), yPos, 0.125D);
                     default -> {}
                 }
-                poseStack.mulPose(Axis.YP.rotationDegrees(90F * (float) (i/16)));
-                poseStack.mulPose(Axis.XP.rotationDegrees(75F));
+                poseStack.rotate(Axis.YP, Mth.HALF_PI * (float) (i/16));
+                poseStack.rotate(Axis.XP, Mth.HALF_PI * 0.9F);
                 poseStack.scale(0.125F, 0.125F, 0.125F);
                 state.outputItem.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
                 poseStack.popPose();

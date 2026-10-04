@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,15 +21,14 @@ public class BoneMealMixin {
             method = "growCrop",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/block/BonemealableBlock;performBonemeal(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V"
-            )
+                    target = "Lnet/minecraft/world/level/block/BonemealableBlock;performBonemeal(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/BonemealSource;)V")
     )
     private static void cancelBonemeal(BonemealableBlock block, ServerLevel serverLevel, RandomSource randomSource,
-                                       BlockPos blockPos, BlockState blockState, Operation<Void> original,
-                                       @Local(name = "state") BlockState state) {
+                                       BlockPos blockPos, BlockState blockState, BonemealSource bonemealSource,
+                                       Operation<Void> original, @Local(name = "state") BlockState state) {
         if (block instanceof CropBlock && !GrowthHelper.allowVanillaCropGrowth(serverLevel, blockPos, state)) {
             return;
         }
-        original.call(block, serverLevel, randomSource, blockPos, blockState);
+        original.call(block, serverLevel, randomSource, blockPos, blockState, bonemealSource);
     }
 }

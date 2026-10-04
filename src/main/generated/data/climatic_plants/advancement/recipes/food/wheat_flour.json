@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "climatic_plants:wheat_flour"
+        "recipes": "climatic_plants:wheat_flour"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

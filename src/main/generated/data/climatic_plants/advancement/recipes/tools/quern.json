@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "climatic_plants:quern"
+        "recipes": "climatic_plants:quern"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
