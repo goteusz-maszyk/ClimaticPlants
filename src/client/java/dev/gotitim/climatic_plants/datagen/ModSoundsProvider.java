@@ -1,18 +1,17 @@
 package dev.gotitim.climatic_plants.datagen;
 
+import static dev.gotitim.climatic_plants.ClimaticPlants.identifier;
+import static dev.gotitim.climatic_plants.content.ClimaticSounds.*;
+import static net.fabricmc.fabric.api.client.datagen.v1.builder.SoundTypeBuilder.RegistrationBuilder.ofEvent;
+import static net.fabricmc.fabric.api.client.datagen.v1.builder.SoundTypeBuilder.RegistrationType.FILE;
+
+import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.client.datagen.v1.builder.SoundTypeBuilder;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricSoundsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-
-import java.util.concurrent.CompletableFuture;
-
-import static dev.gotitim.climatic_plants.ClimaticPlants.identifier;
-import static dev.gotitim.climatic_plants.content.ClimaticSounds.*;
-import static net.fabricmc.fabric.api.client.datagen.v1.builder.SoundTypeBuilder.RegistrationBuilder.ofEvent;
-import static net.fabricmc.fabric.api.client.datagen.v1.builder.SoundTypeBuilder.RegistrationType.FILE;
 
 public class ModSoundsProvider extends FabricSoundsProvider {
     public ModSoundsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {

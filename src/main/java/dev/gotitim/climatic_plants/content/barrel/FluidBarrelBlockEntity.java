@@ -241,19 +241,6 @@ public class FluidBarrelBlockEntity extends BaseContainerBlockEntity
         return result;
     }
 
-    public ItemStack extractItem() {
-        final ItemStack result =
-                items.set(items.get(SLOT_OVERFLOW).isEmpty() ? SLOT_MAIN : SLOT_OVERFLOW, ItemStack.EMPTY);
-        setChanged();
-        return result;
-    }
-
-    public ItemStack insertItem(ItemStack stack) {
-        final ItemStack remainder = ItemUtils.addStack(stack, items, SLOT_MAIN);
-        setChanged();
-        return remainder;
-    }
-
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);

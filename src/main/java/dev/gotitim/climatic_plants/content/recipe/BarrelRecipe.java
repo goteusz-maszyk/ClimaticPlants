@@ -3,6 +3,7 @@ package dev.gotitim.climatic_plants.content.recipe;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.gotitim.climatic_plants.ClimaticPlants;
+import java.util.Optional;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.minecraft.advancements.triggers.Criterion;
@@ -28,8 +29,6 @@ import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jspecify.annotations.Nullable;
-
-import java.util.Optional;
 
 public class BarrelRecipe implements Recipe<BarrelRecipe.BarrelRecipeInput> {
     public static final MapCodec<BarrelRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(i -> i.group(

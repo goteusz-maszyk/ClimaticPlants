@@ -4,6 +4,7 @@ import dev.gotitim.climatic_plants.ClimaticBlockEntities;
 import dev.gotitim.climatic_plants.ClimaticPlants;
 import dev.gotitim.climatic_plants.content.ClimaticBlocks;
 import dev.gotitim.climatic_plants.util.ItemUtils;
+import java.util.Optional;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,8 +45,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
-
-import java.util.Optional;
 
 public class FluidBarrelBlock extends BaseEntityBlock {
     public static final BooleanProperty SEALED = BooleanProperty.create("sealed");

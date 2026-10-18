@@ -10,10 +10,9 @@ public class CalendarUtils {
     public static Component sealDate(long clockTime, Level level) {
         int singleDayTime = level.registryAccess()
                 .lookup(Registries.TIMELINE)
-                .get()
-                .getValue(Timelines.OVERWORLD_DAY)
-                .periodTicks()
-                .orElse(Integer.MAX_VALUE);
+                .map(timelines -> timelines.getValue(Timelines.OVERWORLD_DAY))
+                .map(timeline -> timeline.periodTicks().orElse(Integer.MAX_VALUE))
+                .orElse(24000);
         int day = (int) (clockTime / singleDayTime);
         int dayTime = (int) (clockTime % singleDayTime);
 

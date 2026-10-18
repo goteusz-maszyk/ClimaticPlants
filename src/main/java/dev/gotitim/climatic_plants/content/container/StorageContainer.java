@@ -3,8 +3,6 @@ package dev.gotitim.climatic_plants.content.container;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public interface StorageContainer extends Container {
@@ -49,17 +47,4 @@ public interface StorageContainer extends Container {
     }
 
     NonNullList<ItemStack> getItems();
-
-    default void insertOrExtract(Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
-        if (itemStack.isEmpty()) {
-            player.setItemInHand(hand, extractItem());
-        } else {
-            player.setItemInHand(hand, insertItem(itemStack));
-        }
-    }
-
-    ItemStack insertItem(ItemStack itemStack);
-
-    ItemStack extractItem();
 }
