@@ -3,6 +3,7 @@ package dev.gotitim.climatic_plants.datagen;
 import dev.gotitim.climatic_plants.content.ClimaticBlocks;
 import dev.gotitim.climatic_plants.content.ClimaticTags;
 import dev.gotitim.climatic_plants.content.ModItemIds;
+import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
@@ -13,13 +14,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
 
-import java.util.concurrent.CompletableFuture;
-
 public class ModTagsProvider {
 
     public static class Block extends FabricTagsProvider.BlockTagsProvider {
-        public Block(FabricPackOutput output,
-                     CompletableFuture<HolderLookup.Provider> registryLookupFuture) {
+        public Block(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registryLookupFuture) {
             super(output, registryLookupFuture);
         }
 
@@ -35,21 +33,18 @@ public class ModTagsProvider {
                     .add(BlockItemIds.COBWEB)
                     .add(BlockItemIds.CAKE);
 
-            builder(BlockTags.MINEABLE_WITH_AXE)
-                    .add(ClimaticBlocks.Ids.FLUID_BARREL);
+            builder(BlockTags.MINEABLE_WITH_AXE).add(ClimaticBlocks.Ids.FLUID_BARREL);
         }
     }
 
     public static class Item extends FabricTagsProvider.ItemTagsProvider {
-        public Item(FabricPackOutput output,
-                     CompletableFuture<HolderLookup.Provider> registryLookupFuture) {
+        public Item(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registryLookupFuture) {
             super(output, registryLookupFuture);
         }
 
         @Override
         protected void addTags(HolderLookup.Provider registries) {
-            builder(ClimaticTags.FLINT_TOOL_MATERIALS)
-                    .add(ItemIds.FLINT);
+            builder(ClimaticTags.FLINT_TOOL_MATERIALS).add(ItemIds.FLINT);
 
             builder(ClimaticTags.KNIVES)
                     .add(ModItemIds.FLINT_KNIFE)
@@ -74,9 +69,7 @@ public class ModTagsProvider {
                     .add(ItemIds.SUGAR)
                     .add(ItemIds.BEETROOT);
 
-            builder(ClimaticTags.SWEETENERS)
-                    .add(ItemIds.SUGAR)
-                    .add(ItemIds.HONEY_BOTTLE);
+            builder(ClimaticTags.SWEETENERS).add(ItemIds.SUGAR).add(ItemIds.HONEY_BOTTLE);
 
             builder(ClimaticTags.PLANKS)
                     .add(plank("oak_planks"))
@@ -92,6 +85,7 @@ public class ModTagsProvider {
                     .add(plank("warped_planks"));
         }
 
+        // FQN celowo: zagnieżdżona klasa Item cieniuje import.
         private static ResourceKey<net.minecraft.world.item.Item> plank(String name) {
             return ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("minecraft", name));
         }

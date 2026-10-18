@@ -18,6 +18,7 @@ import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -49,16 +50,18 @@ import java.util.Optional;
 public class FluidBarrelBlock extends BaseEntityBlock {
     public static final BooleanProperty SEALED = BooleanProperty.create("sealed");
     public static final BooleanProperty POWERED = BooleanProperty.create("powered");
-    public static final EnumProperty<Direction> FACING = EnumProperty.create("facing", Direction.class,
-            d -> d != Direction.DOWN
-    );
+    public static final EnumProperty<Direction> FACING =
+            EnumProperty.create("facing", Direction.class, d -> d != Direction.DOWN);
     public static final BooleanProperty RACK = BooleanProperty.create("rack");
 
     public static final VoxelShape SHAPE_Z = box(2, 0, 0, 14, 12, 16);
     public static final VoxelShape SHAPE_X = box(0, 0, 2, 16, 12, 14);
-    public static final VoxelShape RACK_SHAPE = Shapes.or(box(0, 0, 0, 2, 16, 2), box(14, 0, 14, 16, 16, 16),
-            box(14, 0, 0, 16, 16, 2), box(0, 0, 14, 2, 16, 16), box(0, 14, 0, 16, 16, 16)
-    );
+    public static final VoxelShape RACK_SHAPE = Shapes.or(
+            box(0, 0, 0, 2, 16, 2),
+            box(14, 0, 14, 16, 16, 16),
+            box(14, 0, 0, 16, 16, 2),
+            box(0, 0, 14, 2, 16, 16),
+            box(0, 14, 0, 16, 16, 16));
     public static final VoxelShape SHAPE_Z_RACK = Shapes.or(SHAPE_Z, RACK_SHAPE);
     public static final VoxelShape SHAPE_X_RACK = Shapes.or(SHAPE_X, RACK_SHAPE);
     private static final VoxelShape SHAPE = box(2, 0, 2, 14, 16, 14);
@@ -67,30 +70,37 @@ public class FluidBarrelBlock extends BaseEntityBlock {
     public FluidBarrelBlock(BlockBehaviour.Properties properties) {
         super(properties);
 
-        registerDefaultState(
-                defaultBlockState().setValue(POWERED, false).setValue(SEALED, false).setValue(RACK, false));
+        registerDefaultState(defaultBlockState()
+                .setValue(POWERED, false)
+                .setValue(SEALED, false)
+                .setValue(RACK, false));
     }
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState,
-                                                                            BlockEntityType<T> type) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+            Level level, BlockState blockState, BlockEntityType<T> type) {
         return createTickerHelper(type, ClimaticBlockEntities.FLUID_BARREL, FluidBarrelBlockEntity::tickOuter);
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack heldStack, BlockState state, Level level, BlockPos pos,
-                                          Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected InteractionResult useItemOn(
+            ItemStack heldStack,
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Player player,
+            InteractionHand hand,
+            BlockHitResult hitResult) {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
-        final Optional<FluidBarrelBlockEntity> barrelOpt = level.getBlockEntity(pos,
-                ClimaticBlockEntities.FLUID_BARREL
-        );
+        final Optional<FluidBarrelBlockEntity> barrelOpt =
+                level.getBlockEntity(pos, ClimaticBlockEntities.FLUID_BARREL);
         if (barrelOpt.isEmpty()) return InteractionResult.PASS;
         FluidBarrelBlockEntity barrel = barrelOpt.get();
 
         if (heldStack.isEmpty() && player.isShiftKeyDown()) {
             if (state.getValue(RACK) && hitResult.getLocation().y - pos.getY() > 0.875f) {
-                if (!level.getBlockState(pos.above()).is(ClimaticBlocks.FLUID_BARREL) && !level
-                        .getBlockState(pos.above()).is(ClimaticBlocks.BARREL_RACK)) {
+                if (!level.getBlockState(pos.above()).is(ClimaticBlocks.FLUID_BARREL)
+                        && !level.getBlockState(pos.above()).is(ClimaticBlocks.BARREL_RACK)) {
                     player.setItemInHand(hand, new ItemStack(ClimaticBlocks.BARREL_RACK));
                     level.setBlockAndUpdate(pos, state.setValue(RACK, false));
                 } else if (!state.getValue(SEALED)) {
@@ -98,53 +108,80 @@ public class FluidBarrelBlock extends BaseEntityBlock {
                     level.setBlockAndUpdate(pos, ClimaticBlocks.BARREL_RACK.defaultBlockState());
                 } else {
                     player.setItemInHand(hand, createBarrelItemStack(level, pos, state, barrel));
-                    level.setBlock(pos, ClimaticBlocks.BARREL_RACK.defaultBlockState(), Block.UPDATE_ALL | Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS);
+                    level.setBlock(
+                            pos,
+                            ClimaticBlocks.BARREL_RACK.defaultBlockState(),
+                            Block.UPDATE_ALL | Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS);
                 }
             } else {
-                final boolean nextSealed = !state.getValue(SEALED);
-                level.setBlockAndUpdate(pos, state.setValue(SEALED, nextSealed));
-                barrel.setChanged();
+                toggleSeal(level, pos, state);
             }
             level.playSound(null, pos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0f, 0.85f);
             return InteractionResult.SUCCESS_SERVER;
         }
 
-        if (heldStack.is(ClimaticBlocks.BARREL_RACK.asItem()) && state.getValue(
-                FACING) != Direction.UP && !state.getValue(RACK)) {
+        if (heldStack.is(ClimaticBlocks.BARREL_RACK.asItem())
+                && state.getValue(FACING) != Direction.UP
+                && !state.getValue(RACK)) {
             if (!player.isCreative()) {
                 heldStack.shrink(1);
             }
             level.setBlockAndUpdate(pos, state.setValue(RACK, true));
             var sound = state.getSoundType();
-            level.playSound(player, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0F) / 2.0F,
-                    sound.getPitch() * 0.8F
-            );
+            level.playSound(
+                    player,
+                    pos,
+                    sound.getPlaceSound(),
+                    SoundSource.BLOCKS,
+                    (sound.getVolume() + 1.0F) / 2.0F,
+                    sound.getPitch() * 0.8F);
             return InteractionResult.SUCCESS_SERVER;
         }
 
-        if (!state.getValue(SEALED) && (state.getValue(
-                FACING) == Direction.UP || hitResult.getLocation().y - pos.getY() < 0.875f)) {
-            if (ItemUtils.transferFluid(heldStack, barrel, player, hand)) {
-                return InteractionResult.SUCCESS_SERVER;
-            }
-            barrel.insertOrExtract(player, hand);
+        if (!state.getValue(SEALED) && ItemUtils.transferFluid(heldStack, barrel, player, hand)) {
+            return InteractionResult.SUCCESS_SERVER;
         }
-        return InteractionResult.PASS;
+
+        player.openMenu(barrel);
+        return InteractionResult.SUCCESS_SERVER;
+    }
+
+    public static void toggleSeal(Level level, BlockPos pos, BlockState state) {
+        if (level.isClientSide()) {
+            return;
+        }
+        BlockState newState = state.cycle(SEALED);
+        level.setBlockAndUpdate(pos, newState);
+        level.getBlockEntity(pos, ClimaticBlockEntities.FLUID_BARREL).ifPresent(barrel -> {
+            barrel.setChanged();
+            if (newState.getValue(SEALED)) {
+                barrel.onSealed();
+            } else {
+                barrel.onUnsealed();
+            }
+        });
     }
 
     @Override
-    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks,
-                                     BlockPos pos, Direction directionToNeighbour, BlockPos neighbourPos,
-                                     BlockState neighbourState, RandomSource random) {
-        if (state.getValue(FACING).getAxis().isHorizontal() && directionToNeighbour == Direction.DOWN && !level
-                .getBlockState(neighbourPos).isFaceSturdy(level, neighbourPos, Direction.UP, SupportType.CENTER)) {
+    protected BlockState updateShape(
+            BlockState state,
+            LevelReader level,
+            ScheduledTickAccess ticks,
+            BlockPos pos,
+            Direction directionToNeighbour,
+            BlockPos neighbourPos,
+            BlockState neighbourState,
+            RandomSource random) {
+        if (state.getValue(FACING).getAxis().isHorizontal()
+                && directionToNeighbour == Direction.DOWN
+                && !level.getBlockState(neighbourPos)
+                        .isFaceSturdy(level, neighbourPos, Direction.UP, SupportType.CENTER)) {
             return Blocks.AIR.defaultBlockState();
         }
         return state;
     }
 
-    @Nullable
-    @Override
+    @Nullable @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = this.defaultBlockState();
         Direction dir = context.getClickedFace();
@@ -161,13 +198,23 @@ public class FluidBarrelBlock extends BaseEntityBlock {
         }
 
         if (level.getBlockState(pos).is(ClimaticBlocks.BARREL_RACK)) {
-            return state.setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(RACK, true);
+            return state.setValue(FACING, context.getHorizontalDirection().getOpposite())
+                    .setValue(RACK, true);
         }
 
         if (context.getItemInHand().has(DataComponents.BLOCK_ENTITY_DATA)) {
             return state.setValue(SEALED, true);
         }
         return state;
+    }
+
+    @Override
+    public void setPlacedBy(
+            Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        if (state.getValue(SEALED) && level.getBlockEntity(pos) instanceof FluidBarrelBlockEntity barrel) {
+            barrel.onSealed();
+        }
     }
 
     @Override
@@ -213,24 +260,40 @@ public class FluidBarrelBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block,
-                                   @Nullable Orientation orientation, boolean movedByPiston) {
+    protected void neighborChanged(
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Block block,
+            @Nullable Orientation orientation,
+            boolean movedByPiston) {
         final boolean signal = level.hasNeighborSignal(pos);
-        if (signal != state.getValue(POWERED)) {
-            if (signal == state.getValue(SEALED)) {
-                level.setBlockAndUpdate(pos, state.setValue(POWERED, signal));
-            } else {
-                level.setBlockAndUpdate(pos, state.setValue(POWERED, signal).setValue(SEALED, signal));
+        if (signal == state.getValue(POWERED)) return;
 
-                level.getBlockEntity(pos, ClimaticBlockEntities.FLUID_BARREL)
-                     .ifPresent(FluidBarrelBlockEntity::setChanged);
-            }
+        if (signal == state.getValue(SEALED)) {
+            level.setBlockAndUpdate(pos, state.setValue(POWERED, signal));
+            return;
         }
+
+        level.setBlockAndUpdate(pos, state.setValue(POWERED, signal).setValue(SEALED, signal));
+        level.getBlockEntity(pos, ClimaticBlockEntities.FLUID_BARREL).ifPresent(barrel -> {
+            barrel.setChanged();
+            if (signal) {
+                barrel.onSealed();
+            } else {
+                barrel.onUnsealed();
+            }
+        });
     }
 
     @Override
-    public void playerDestroy(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state,
-                              @Nullable BlockEntity blockEntity, ItemStack tool) {
+    public void playerDestroy(
+            ServerLevel level,
+            ServerPlayer player,
+            BlockPos pos,
+            BlockState state,
+            @Nullable BlockEntity blockEntity,
+            ItemStack tool) {
         if (state.getValue(SEALED) && blockEntity instanceof FluidBarrelBlockEntity barrel) {
             player.awardStat(Stats.BLOCK_MINED.get(this));
             player.causeFoodExhaustion(0.005F);
@@ -243,12 +306,11 @@ public class FluidBarrelBlock extends BaseEntityBlock {
         }
     }
 
-    private static ItemStack createBarrelItemStack(Level level, BlockPos pos, BlockState state,
-                                                   FluidBarrelBlockEntity barrel) {
+    private static ItemStack createBarrelItemStack(
+            Level level, BlockPos pos, BlockState state, FluidBarrelBlockEntity barrel) {
         ItemStack stack = state.getCloneItemStack(level, pos, true);
-        try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(barrel.problemPath(),
-                ClimaticPlants.LOGGER
-        )) {
+        try (ProblemReporter.ScopedCollector reporter =
+                new ProblemReporter.ScopedCollector(barrel.problemPath(), ClimaticPlants.LOGGER)) {
             TagValueOutput output = TagValueOutput.createWithContext(reporter, level.registryAccess());
             barrel.saveAdditional(output);
             BlockItem.setBlockEntityData(stack, barrel.getType(), output);

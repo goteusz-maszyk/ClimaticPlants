@@ -1,4 +1,24 @@
 {
+  "block.barrel.close": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "minecraft:block.stone.place",
+        "pitch": 0.65
+      }
+    ],
+    "subtitle": "sound.climatic_plants.block.barrel.close"
+  },
+  "block.barrel.open": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "minecraft:block.stone.break",
+        "pitch": 0.9
+      }
+    ],
+    "subtitle": "sound.climatic_plants.block.barrel.open"
+  },
   "block.quern.drag": {
     "sounds": [
       "climatic_plants:block/quern/drag1",

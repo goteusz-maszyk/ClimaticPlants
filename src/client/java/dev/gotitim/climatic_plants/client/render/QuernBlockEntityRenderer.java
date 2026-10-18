@@ -17,7 +17,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
-public class QuernBlockEntityRenderer implements BlockEntityRenderer<QuernBlockEntity, QuernBlockEntityRenderer.QuernRenderState> {
+public class QuernBlockEntityRenderer
+        implements BlockEntityRenderer<QuernBlockEntity, QuernBlockEntityRenderer.QuernRenderState> {
     private final ItemModelResolver itemModelResolver;
 
     public QuernBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
@@ -30,25 +31,36 @@ public class QuernBlockEntityRenderer implements BlockEntityRenderer<QuernBlockE
     }
 
     @Override
-    public void extractRenderState(QuernBlockEntity blockEntity, QuernRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+    public void extractRenderState(
+            QuernBlockEntity blockEntity,
+            QuernRenderState state,
+            float partialTicks,
+            Vec3 cameraPosition,
+            ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
         state.handstone = resolveItem(blockEntity, QuernBlockEntity.SLOT_HANDSTONE, 0);
         state.inputItem = resolveItem(blockEntity, QuernBlockEntity.SLOT_INPUT, 1);
         state.outputItem = resolveItem(blockEntity, QuernBlockEntity.SLOT_OUTPUT, 2);
-        state.outputItemCount = blockEntity.getItem(QuernBlockEntity.SLOT_OUTPUT).getCount();
+        state.outputItemCount =
+                blockEntity.getItem(QuernBlockEntity.SLOT_OUTPUT).getCount();
         state.recipeTimer = blockEntity.recipeTimer / QuernBlockEntity.MANUAL_TICKS;
     }
 
     private ItemStackRenderState resolveItem(QuernBlockEntity quern, int slot, int seed) {
         ItemStackRenderState renderState = new ItemStackRenderState();
         if (!quern.getItem(slot).isEmpty()) {
-            itemModelResolver.updateForTopItem(renderState, quern.getItem(slot), ItemDisplayContext.FIXED, quern.getLevel(), null, seed);
+            itemModelResolver.updateForTopItem(
+                    renderState, quern.getItem(slot), ItemDisplayContext.FIXED, quern.getLevel(), null, seed);
         }
         return renderState;
     }
 
     @Override
-    public void submit(QuernRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
+    public void submit(
+            QuernRenderState state,
+            PoseStack poseStack,
+            SubmitNodeCollector submitNodeCollector,
+            CameraRenderState camera) {
         if (!state.handstone.isEmpty()) {
             poseStack.pushPose();
             poseStack.translate(0.5, 0.705, 0.5);
@@ -56,7 +68,7 @@ public class QuernBlockEntityRenderer implements BlockEntityRenderer<QuernBlockE
             poseStack.translate(-0.5, -0.705, -0.5);
             poseStack.translate(0.5, 0.6875, 0.5);
             poseStack.scale(1.25f, 1.25f, 1.25f);
-            state.handstone.submit(poseStack, submitNodeCollector, state.lightCoords, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, 0);
+            state.handstone.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
             poseStack.popPose();
         }
 
@@ -81,10 +93,11 @@ public class QuernBlockEntityRenderer implements BlockEntityRenderer<QuernBlockE
                     case 3 -> poseStack.translate(0.875D - (0.046875D * (i - 48)), yPos, 0.125D);
                     default -> {}
                 }
-                poseStack.rotate(Axis.YP, Mth.HALF_PI * (float) (i/16));
+                poseStack.rotate(Axis.YP, Mth.HALF_PI * (float) (i / 16));
                 poseStack.rotate(Axis.XP, Mth.HALF_PI * 0.9F);
                 poseStack.scale(0.125F, 0.125F, 0.125F);
-                state.outputItem.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+                state.outputItem.submit(
+                        poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
                 poseStack.popPose();
             }
         }

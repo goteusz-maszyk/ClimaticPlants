@@ -1,5 +1,7 @@
 package dev.gotitim.climatic_plants.content.quern;
 
+import static dev.gotitim.climatic_plants.content.quern.QuernBlockEntity.*;
+
 import com.mojang.math.Constants;
 import dev.gotitim.climatic_plants.ClimaticBlockEntities;
 import dev.gotitim.climatic_plants.content.ClimaticItems;
@@ -30,8 +32,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
-import static dev.gotitim.climatic_plants.content.quern.QuernBlockEntity.*;
-
 public class QuernBlock extends BaseEntityBlock {
     public static final BooleanProperty HAS_HANDSTONE = BooleanProperty.create("has_handstone");
 
@@ -48,12 +48,13 @@ public class QuernBlock extends BaseEntityBlock {
     private static final VoxelShape INPUT_SLOT_SHAPE = box(6.0D, 13.76D, 6.0D, 10.0D, 16.24D, 10.0D);
     private static final AABB INPUT_SLOT_AABB = INPUT_SLOT_SHAPE.bounds().inflate(0.01D);
 
-    private static final VoxelShape FULL_SHAPE = Shapes.join(Shapes.or(BASE_SHAPE, HANDSTONE_SHAPE, HANDLE_SHAPE), INPUT_SLOT_SHAPE, BooleanOp.ONLY_FIRST);
+    private static final VoxelShape FULL_SHAPE =
+            Shapes.join(Shapes.or(BASE_SHAPE, HANDSTONE_SHAPE, HANDLE_SHAPE), INPUT_SLOT_SHAPE, BooleanOp.ONLY_FIRST);
     private static final VoxelShape COLLISION_FULL_SHAPE = Shapes.or(BASE_SHAPE, HANDSTONE_SHAPE);
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState,
-                                                                            BlockEntityType<T> type) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+            Level level, BlockState blockState, BlockEntityType<T> type) {
         return createTickerHelper(type, ClimaticBlockEntities.QUERN, QuernBlockEntity::tick);
     }
 
@@ -69,15 +70,18 @@ public class QuernBlock extends BaseEntityBlock {
 
     @Override
     protected void entityInside(
-            final BlockState state, final Level level, final BlockPos pos, final Entity entity,
-            final InsideBlockEffectApplier effectApplier, final boolean isPrecise
-    ) {
+            final BlockState state,
+            final Level level,
+            final BlockPos pos,
+            final Entity entity,
+            final InsideBlockEffectApplier effectApplier,
+            final boolean isPrecise) {
         if (!(level.getBlockEntity(pos) instanceof QuernBlockEntity quern)) return;
 
         final float rotationSpeed = quern.getRotationSpeed();
-        if (rotationSpeed != 0f &&
-                HANDSTONE_AABB.move(pos).contains(entity.position()) &&
-                !BASE_AABB.move(pos).contains(entity.position())) {
+        if (rotationSpeed != 0f
+                && HANDSTONE_AABB.move(pos).contains(entity.position())
+                && !BASE_AABB.move(pos).contains(entity.position())) {
             Vec3 origin = HANDSTONE_CENTER.add(pos.getX(), pos.getY(), pos.getZ());
             float speed = rotationSpeed * Constants.RAD_TO_DEG;
 
@@ -106,7 +110,14 @@ public class QuernBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected InteractionResult useItemOn(
+            ItemStack stack,
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Player player,
+            InteractionHand hand,
+            BlockHitResult hitResult) {
         if (!(level.getBlockEntity(pos) instanceof QuernBlockEntity quern)) return InteractionResult.PASS;
 
         if (quern.isGrinding()) return InteractionResult.PASS;
@@ -115,14 +126,27 @@ public class QuernBlock extends BaseEntityBlock {
         return switch (selection) {
             case HANDLE -> attemptGrind(quern);
             case INPUT_SLOT -> insertOrExtract(quern, hand, player, false);
-            case HANDSTONE -> player.isShiftKeyDown() || player.getItemInHand(hand).is(ClimaticItems.HANDSTONE)
-                    ? insertOrExtract(quern, hand, player, false)
-                    : attemptGrind(quern);
+            case HANDSTONE ->
+                player.isShiftKeyDown() || player.getItemInHand(hand).is(ClimaticItems.HANDSTONE)
+                        ? insertOrExtract(quern, hand, player, false)
+                        : attemptGrind(quern);
             case BASE -> insertOrExtract(quern, hand, player, true);
         };
     }
 
-    private static SelectionPlace getPlayerSelection(QuernBlockEntity quern, BlockPos pos, Player player, BlockHitResult result) {
+    public static @Nullable VoxelShape getPlayerSelectionShape(
+            Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if (!(level.getBlockEntity(pos) instanceof QuernBlockEntity quern)) return null;
+        return switch (getPlayerSelection(quern, pos, player, hit)) {
+            case HANDLE -> HANDLE_SHAPE;
+            case HANDSTONE -> HANDSTONE_SHAPE;
+            case INPUT_SLOT -> INPUT_SLOT_SHAPE;
+            case BASE -> null;
+        };
+    }
+
+    private static SelectionPlace getPlayerSelection(
+            QuernBlockEntity quern, BlockPos pos, Player player, BlockHitResult result) {
         final ItemStack held = player.getItemInHand(InteractionHand.MAIN_HAND);
         final Vec3 hit = result.getLocation();
 
@@ -134,16 +158,18 @@ public class QuernBlock extends BaseEntityBlock {
                     return SelectionPlace.INPUT_SLOT;
                 }
             }
-            if (!quern.getItem(SLOT_INPUT).isEmpty() && INPUT_SLOT_AABB.move(pos).contains(hit)) {
+            if (!quern.getItem(SLOT_INPUT).isEmpty()
+                    && INPUT_SLOT_AABB.move(pos).contains(hit)) {
                 return SelectionPlace.INPUT_SLOT;
             }
         }
-        if ((quern.hasHandstone() || quern.isItemValid(SLOT_HANDSTONE, held)) && HANDSTONE_AABB.move(pos).contains(hit))
-            return SelectionPlace.HANDSTONE;
+        if ((quern.hasHandstone() || quern.isItemValid(SLOT_HANDSTONE, held))
+                && HANDSTONE_AABB.move(pos).contains(hit)) return SelectionPlace.HANDSTONE;
         return SelectionPlace.BASE;
     }
 
-    private static InteractionResult insertOrExtract(QuernBlockEntity quern, InteractionHand hand, Player player, boolean outputSlot) {
+    private static InteractionResult insertOrExtract(
+            QuernBlockEntity quern, InteractionHand hand, Player player, boolean outputSlot) {
         final ItemStack heldStack = player.getItemInHand(hand);
         if (heldStack.isEmpty()) {
             if (outputSlot) {
@@ -164,8 +190,7 @@ public class QuernBlock extends BaseEntityBlock {
         return InteractionResult.SUCCESS;
     }
 
-    private InteractionResult attemptGrind(QuernBlockEntity quern)
-    {
+    private InteractionResult attemptGrind(QuernBlockEntity quern) {
         return quern.startGrinding() ? InteractionResult.SUCCESS : InteractionResult.FAIL;
     }
 
@@ -175,7 +200,8 @@ public class QuernBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    protected VoxelShape getCollisionShape(
+            BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return state.getValue(HAS_HANDSTONE) ? COLLISION_FULL_SHAPE : BASE_SHAPE;
     }
 

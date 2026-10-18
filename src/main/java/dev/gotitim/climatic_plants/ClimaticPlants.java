@@ -16,14 +16,14 @@ import net.minecraft.world.item.Items;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class ClimaticPlants implements ModInitializer {
     public static final String MOD_ID = "climatic_plants";
     public static final Logger LOGGER = LoggerFactory.getLogger("ClimaticPlants");
 
-    public static final UniversalDataManager<ClimateRange> climateRanges = new UniversalDataManager<>("climate_range",
-            ClimateRange.CODEC, new ClimateRange(Integer.MIN_VALUE, Integer.MAX_VALUE, Float.MIN_VALUE, Float.MAX_VALUE)
-    );
+    public static final UniversalDataManager<ClimateRange> climateRanges = new UniversalDataManager<>(
+            "climate_range",
+            ClimateRange.CODEC,
+            new ClimateRange(Integer.MIN_VALUE, Integer.MAX_VALUE, Float.MIN_VALUE, Float.MAX_VALUE));
 
     public static Identifier identifier(String path) {
         return Identifier.fromNamespaceAndPath(MOD_ID, path);
@@ -42,12 +42,29 @@ public class ClimaticPlants implements ModInitializer {
         climateRanges.register();
 
         CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS)
-                             .register(output -> output.insertAfter(Items.WHEAT_SEEDS, ClimaticItems.CARROT_SEEDS));
-        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(output -> {
-            output.insertAfter(Items.STONE_HOE, ClimaticItems.FLINT_KNIFE);
-            output.insertAfter(Items.COPPER_HOE, ClimaticItems.COPPER_KNIFE);
-            output.insertAfter(Items.IRON_HOE, ClimaticItems.IRON_KNIFE);
-            output.insertAfter(Items.DIAMOND_HOE, ClimaticItems.DIAMOND_KNIFE);
+                .register(output -> output.insertAfter(Items.WHEAT_SEEDS, ClimaticItems.CARROT_SEEDS));
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES)
+                .register(output -> {
+                    output.insertAfter(Items.STONE_HOE, ClimaticItems.FLINT_KNIFE);
+                    output.insertAfter(Items.COPPER_HOE, ClimaticItems.COPPER_KNIFE);
+                    output.insertAfter(Items.IRON_HOE, ClimaticItems.IRON_KNIFE);
+                    output.insertAfter(Items.DIAMOND_HOE, ClimaticItems.DIAMOND_KNIFE);
+                    output.insertAfter(Items.GRINDSTONE, ClimaticBlocks.QUERN.asItem());
+                    output.insertAfter(ClimaticBlocks.QUERN.asItem(), ClimaticItems.HANDSTONE);
+                    output.insertAfter(Items.BARREL, ClimaticBlocks.FLUID_BARREL.asItem());
+                    output.insertAfter(ClimaticBlocks.FLUID_BARREL.asItem(), ClimaticBlocks.BARREL_RACK.asItem());
+                });
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS)
+                .register(output -> {
+                    output.insertAfter(Items.BREAD, ClimaticItems.WHEAT_FLATBREAD);
+                    output.insertAfter(ClimaticItems.WHEAT_FLATBREAD, ClimaticItems.YEAST_BUCKET);
+                    output.insertAfter(ClimaticItems.YEAST_BUCKET, ClimaticItems.YEAST_CULTURE);
+                });
+        CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.INGREDIENTS).register(output -> {
+            output.insertAfter(Items.WHEAT, ClimaticItems.WHEAT_GRAIN);
+            output.insertAfter(ClimaticItems.WHEAT_GRAIN, ClimaticItems.WHEAT_FLOUR);
+            output.insertAfter(ClimaticItems.WHEAT_FLOUR, ClimaticItems.WHEAT_DOUGH);
+            output.insertAfter(ClimaticItems.WHEAT_DOUGH, ClimaticItems.WHEAT_FLATBREAD_DOUGH);
         });
     }
 }

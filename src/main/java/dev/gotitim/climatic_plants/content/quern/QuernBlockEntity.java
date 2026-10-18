@@ -1,11 +1,11 @@
 package dev.gotitim.climatic_plants.content.quern;
 
 import dev.gotitim.climatic_plants.ClimaticBlockEntities;
-import dev.gotitim.climatic_plants.content.ClimaticBlocks;
 import dev.gotitim.climatic_plants.content.ClimaticItems;
 import dev.gotitim.climatic_plants.content.ClimaticSounds;
 import dev.gotitim.climatic_plants.content.recipe.QuernRecipe;
 import dev.gotitim.climatic_plants.util.MathUtils;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -35,17 +35,15 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
-import java.util.Optional;
-
 public class QuernBlockEntity extends BlockEntity implements Container {
     public static final int SLOT_HANDSTONE = 0;
     public static final int SLOT_INPUT = 1;
     public static final int SLOT_OUTPUT = 2;
 
     public static final int MANUAL_TICKS = 90;
-    public static final float MANUAL_SPEED = Mth.TWO_PI / MANUAL_TICKS; // In radians / tick
+    public static final float MANUAL_SPEED = Mth.TWO_PI / MANUAL_TICKS;
 
-    private static final float MANUAL_RECIPE_PER_TICK = 1f; // Exactly 90 ticks at 1/tick
+    private static final float MANUAL_RECIPE_PER_TICK = 1f;
 
     public final NonNullList<ItemStack> items = NonNullList.withSize(3, ItemStack.EMPTY);
     public float recipeTimer;
@@ -69,9 +67,13 @@ public class QuernBlockEntity extends BlockEntity implements Container {
 
         if (quern.recipeTimer <= 0) {
             quern.finishGrinding();
-            level.playSound(null, pos, SoundEvents.ARMOR_STAND_FALL, SoundSource.BLOCKS,
-                    1.0F + level.getRandom().nextFloat(), level.getRandom().nextFloat() + 0.7F + 0.3F
-            );
+            level.playSound(
+                    null,
+                    pos,
+                    SoundEvents.ARMOR_STAND_FALL,
+                    SoundSource.BLOCKS,
+                    1.0F + level.getRandom().nextFloat(),
+                    level.getRandom().nextFloat() + 0.7F + 0.3F);
 
             final ItemStack handstone = quern.getItem(SLOT_HANDSTONE);
             final Item item = handstone.getItem();
@@ -80,12 +82,20 @@ public class QuernBlockEntity extends BlockEntity implements Container {
 
             if (!quern.hasHandstone()) {
                 quern.updateHandstone();
-                level.playSound(null, pos, SoundEvents.STONE_BREAK, SoundSource.BLOCKS,
-                        1.0F + level.getRandom().nextFloat(), level.getRandom().nextFloat() + 0.7F + 0.3F
-                );
-                level.playSound(null, pos, SoundEvents.ITEM_BREAK.value(), SoundSource.BLOCKS,
-                        1.0F + level.getRandom().nextFloat(), level.getRandom().nextFloat() + 0.7F + 0.3F
-                );
+                level.playSound(
+                        null,
+                        pos,
+                        SoundEvents.STONE_BREAK,
+                        SoundSource.BLOCKS,
+                        1.0F + level.getRandom().nextFloat(),
+                        level.getRandom().nextFloat() + 0.7F + 0.3F);
+                level.playSound(
+                        null,
+                        pos,
+                        SoundEvents.ITEM_BREAK.value(),
+                        SoundSource.BLOCKS,
+                        1.0F + level.getRandom().nextFloat(),
+                        level.getRandom().nextFloat() + 0.7F + 0.3F);
 
                 sendParticle(serverLevel, pos, item, 15);
             }
@@ -94,10 +104,16 @@ public class QuernBlockEntity extends BlockEntity implements Container {
     }
 
     private static void sendParticle(ServerLevel level, BlockPos pos, Item item, int count) {
-        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, item), pos.getX() + 0.5D, pos.getY() + 0.875D,
-                pos.getZ() + 0.5D, count, MathUtils.triangleRandom(level.getRandom()) / 2.0D,
-                level.getRandom().nextDouble() / 4.0D, MathUtils.triangleRandom(level.getRandom()) / 2.0D, 0.15f
-        );
+        level.sendParticles(
+                new ItemParticleOption(ParticleTypes.ITEM, item),
+                pos.getX() + 0.5D,
+                pos.getY() + 0.875D,
+                pos.getZ() + 0.5D,
+                count,
+                MathUtils.triangleRandom(level.getRandom()) / 2.0D,
+                level.getRandom().nextDouble() / 4.0D,
+                MathUtils.triangleRandom(level.getRandom()) / 2.0D,
+                0.15f);
     }
 
     @Override
@@ -130,7 +146,7 @@ public class QuernBlockEntity extends BlockEntity implements Container {
     }
 
     public boolean isItemValid(int slot, ItemStack stack) {
-        return slot != SLOT_HANDSTONE || stack.is(ClimaticBlocks.QUERN.asItem());
+        return slot != SLOT_HANDSTONE || stack.is(ClimaticItems.HANDSTONE);
     }
 
     public boolean isGrinding() {
@@ -152,9 +168,13 @@ public class QuernBlockEntity extends BlockEntity implements Container {
         if (recipe.isPresent()) {
             this.activeRecipe = recipe.get().value();
             recipeTimer = MANUAL_TICKS;
-            level.playSound(null, worldPosition, ClimaticSounds.QUERN_DRAG, SoundSource.BLOCKS, 1,
-                    1 + ((level.getRandom().nextFloat() - level.getRandom().nextFloat()) / 16)
-            );
+            level.playSound(
+                    null,
+                    worldPosition,
+                    ClimaticSounds.QUERN_DRAG,
+                    SoundSource.BLOCKS,
+                    1,
+                    1 + ((level.getRandom().nextFloat() - level.getRandom().nextFloat()) / 16));
             setChanged();
             return true;
         }
@@ -181,17 +201,19 @@ public class QuernBlockEntity extends BlockEntity implements Container {
             setItem(SLOT_OUTPUT, outputStack.copy());
             outputStack.setCount(0);
         } else if (ItemStack.isSameItemSameComponents(currentOutput, outputStack)) {
-            final int mergeAmount = Math.min(outputStack.getCount(),
-                    currentOutput.getMaxStackSize() - currentOutput.getCount()
-            );
+            final int mergeAmount =
+                    Math.min(outputStack.getCount(), currentOutput.getMaxStackSize() - currentOutput.getCount());
             outputStack.shrink(mergeAmount);
             currentOutput.grow(mergeAmount);
         }
 
         if (!outputStack.isEmpty()) {
-            level.addFreshEntity(new ItemEntity(level, worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D,
-                    worldPosition.getZ() + 0.5D, outputStack
-            ));
+            level.addFreshEntity(new ItemEntity(
+                    level,
+                    worldPosition.getX() + 0.5D,
+                    worldPosition.getY() + 0.5D,
+                    worldPosition.getZ() + 0.5D,
+                    outputStack));
         }
 
         inputStack.shrink(1);

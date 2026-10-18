@@ -1,6 +1,7 @@
 plugins {
     id 'net.fabricmc.fabric-loom' version "${loom_version}"
     id 'maven-publish'
+    id 'com.diffplug.spotless' version "8.10.4"
 }
 
 fabricApi {
@@ -87,5 +88,31 @@ publishing {
         // Notice: This block does NOT have the same function as the block in the top level.
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
+    }
+}
+
+spotless {
+    ratchetFrom 'origin/main'
+
+    format 'misc', {
+        target '*.gradle', '.gitattributes', '.gitignore'
+
+        trimTrailingWhitespace()
+        leadingTabsToSpaces()
+        endWithNewline()
+    }
+    java {
+        // lint/refactor steps first — cleanthat may break style, formatter must run last
+        cleanthat().sourceCompatibility('25')
+        removeUnusedImports()
+        forbidModuleImports()
+
+        // palantir: 120 kolumn jak domyślny right margin w IntelliJ (gJF ma sztywne 100).
+        palantirJavaFormat().formatJavadoc(false)
+        formatAnnotations()
+
+        trimTrailingWhitespace()
+        leadingTabsToSpaces()
+        endWithNewline()
     }
 }

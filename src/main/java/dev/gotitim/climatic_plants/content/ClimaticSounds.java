@@ -8,15 +8,15 @@ import net.minecraft.sounds.SoundEvent;
 
 public class ClimaticSounds {
     public static final SoundEvent QUERN_DRAG = register("block.quern.drag");
+    public static final SoundEvent BARREL_OPEN = register("block.barrel.open");
+    public static final SoundEvent BARREL_CLOSE = register("block.barrel.close");
 
     private static SoundEvent register(String id) {
         Identifier identifier = ClimaticPlants.identifier(id);
-        return Registry.register(BuiltInRegistries.SOUND_EVENT, identifier,
-                SoundEvent.createVariableRangeEvent(identifier)
-        );
+        return Registry.register(
+                BuiltInRegistries.SOUND_EVENT, identifier, SoundEvent.createVariableRangeEvent(identifier));
     }
 
     @SuppressWarnings("EmptyMethod")
-    public static void init() {
-    }
+    public static void init() {}
 }
